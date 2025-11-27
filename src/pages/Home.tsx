@@ -81,16 +81,16 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32 bg-gradient-to-br from-black via-gray-900 to-gray-800">
+      <section className="relative overflow-hidden py-20 md:py-32 bg-background dark:bg-gradient-to-br dark:from-black dark:via-gray-900 dark:to-gray-800">
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight text-white">
+            <h1 className="text-4xl md:text-6xl font-bold leading-tight text-foreground">
               Collaborative Notes for
-              <span className="block bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+              <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                 Students
               </span>
             </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
               Share, discover, and download quality study notes from students across all branches and semesters.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
