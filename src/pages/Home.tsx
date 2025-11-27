@@ -81,7 +81,7 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32 bg-background dark:bg-gradient-to-br dark:from-black dark:via-gray-900 dark:to-gray-800">
+      <section className="relative overflow-hidden py-20 md:py-32 bg-background dark:bg-gradient-to-br dark:from-black dark:via-gray-700 dark:to-white">
         <div className="container mx-auto px-4 relative">
           <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
             <h1 className="text-4xl md:text-6xl font-bold leading-tight text-foreground">
