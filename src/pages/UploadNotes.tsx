@@ -54,7 +54,7 @@ const UploadNotes = () => {
         <div className="flex-1 flex items-center justify-center container mx-auto px-4 py-20">
           <div className="glass-card rounded-2xl p-12 text-center max-w-2xl animate-fade-in">
             <CheckCircle2 className="h-20 w-20 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Upload Successful!</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Upload Successful!</h2>
             <p className="text-muted-foreground mb-8">
               Your notes have been uploaded and will be available to students after review.
             </p>
@@ -81,7 +81,7 @@ const UploadNotes = () => {
         <div className="max-w-3xl mx-auto">
           {/* Header */}
           <div className="mb-8 text-center">
-            <h1 className="text-4xl font-bold mb-2">Upload Notes</h1>
+            <h1 className="text-4xl font-bold text-foreground mb-2">Upload Notes</h1>
             <p className="text-muted-foreground">
               Share your study materials with the community
             </p>

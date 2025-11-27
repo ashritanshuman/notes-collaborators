@@ -12,7 +12,7 @@ export const Footer = () => {
               <div className="p-2 rounded-lg bg-primary/10">
                 <BookOpen className="h-5 w-5 text-primary" />
               </div>
-              <span className="text-lg font-bold">NotesHub</span>
+              <span className="text-lg font-bold text-foreground">NotesHub</span>
             </Link>
             <p className="text-sm text-muted-foreground">
               Collaborative platform for sharing and accessing study notes across all branches and semesters.
@@ -21,7 +21,7 @@ export const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="font-semibold mb-4">Quick Links</h3>
+            <h3 className="font-semibold text-foreground mb-4">Quick Links</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/" className="text-sm text-muted-foreground hover:text-primary transition-smooth">
@@ -48,7 +48,7 @@ export const Footer = () => {
 
           {/* Resources */}
           <div>
-            <h3 className="font-semibold mb-4">Resources</h3>
+            <h3 className="font-semibold text-foreground mb-4">Resources</h3>
             <ul className="space-y-2">
               <li>
                 <Link to="/admin" className="text-sm text-muted-foreground hover:text-primary transition-smooth">
@@ -75,7 +75,7 @@ export const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="font-semibold mb-4">Contact</h3>
+            <h3 className="font-semibold text-foreground mb-4">Contact</h3>
             <ul className="space-y-3">
               <li className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />

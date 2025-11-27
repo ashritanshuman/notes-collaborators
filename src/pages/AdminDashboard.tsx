@@ -55,7 +55,7 @@ const AdminDashboard = () => {
       <div className="flex-1 container mx-auto px-4 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
           <p className="text-muted-foreground">
             Manage notes, users, and platform analytics
           </p>
@@ -86,7 +86,7 @@ const AdminDashboard = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-2">
                 <AlertCircle className="h-5 w-5 text-destructive" />
-                <h2 className="text-xl font-bold">Reported Notes</h2>
+                <h2 className="text-xl font-bold text-foreground">Reported Notes</h2>
               </div>
               <Badge variant="destructive">{reportedNotes.length}</Badge>
             </div>
@@ -99,7 +99,7 @@ const AdminDashboard = () => {
                 >
                   <div className="flex items-start justify-between">
                     <div>
-                      <h3 className="font-semibold mb-1">{report.title}</h3>
+                      <h3 className="font-semibold text-foreground mb-1">{report.title}</h3>
                       <p className="text-sm text-muted-foreground">
                         Reported by {report.reportedBy} • {report.date}
                       </p>
@@ -123,12 +123,12 @@ const AdminDashboard = () => {
 
           {/* Branch Statistics */}
           <div className="glass-card p-6 rounded-xl">
-            <h2 className="text-xl font-bold mb-6">Branch Statistics</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">Branch Statistics</h2>
             <div className="space-y-4">
               {branchStats.map((stat, index) => (
                 <div key={index} className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium">{stat.branch}</span>
+                    <span className="font-medium text-foreground">{stat.branch}</span>
                     <span className="text-muted-foreground">
                       {stat.notes} notes • {stat.users} users
                     </span>
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
 
         {/* Management Section */}
         <div className="glass-card p-6 rounded-xl mt-8">
-          <h2 className="text-xl font-bold mb-6">Quick Actions</h2>
+          <h2 className="text-xl font-bold text-foreground mb-6">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Button variant="outline" className="justify-start">
               <Users className="h-4 w-4 mr-2" />

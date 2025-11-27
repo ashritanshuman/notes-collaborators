@@ -86,7 +86,7 @@ const NoteDetail = () => {
               {/* Note Info */}
               <div className="glass-card rounded-xl p-8">
                 <div className="flex items-start justify-between mb-4">
-                  <h1 className="text-3xl font-bold flex-1">{note.title}</h1>
+                  <h1 className="text-3xl font-bold text-foreground flex-1">{note.title}</h1>
                   <Badge>{note.fileType}</Badge>
                 </div>
 
@@ -152,7 +152,7 @@ const NoteDetail = () => {
 
               {/* PDF Viewer Placeholder */}
               <div className="glass-card rounded-xl p-8">
-                <h2 className="text-xl font-bold mb-4">Preview</h2>
+                <h2 className="text-xl font-bold text-foreground mb-4">Preview</h2>
                 <div className="aspect-[3/4] bg-muted/50 rounded-lg flex items-center justify-center">
                   <div className="text-center">
                     <FileText className="h-16 w-16 text-muted-foreground mx-auto mb-4" />
@@ -165,7 +165,7 @@ const NoteDetail = () => {
 
               {/* Comments Section */}
               <div className="glass-card rounded-xl p-8">
-                <h2 className="text-xl font-bold mb-6">
+                <h2 className="text-xl font-bold text-foreground mb-6">
                   Comments ({comments.length})
                 </h2>
 
@@ -192,12 +192,12 @@ const NoteDetail = () => {
                       </div>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
-                          <span className="font-semibold">{c.user}</span>
+                          <span className="font-semibold text-foreground">{c.user}</span>
                           <span className="text-sm text-muted-foreground">
                             {c.timestamp}
                           </span>
                         </div>
-                        <p className="text-sm">{c.comment}</p>
+                        <p className="text-sm text-foreground">{c.comment}</p>
                       </div>
                     </div>
                   ))}
@@ -209,30 +209,30 @@ const NoteDetail = () => {
             <div className="space-y-6">
               {/* Stats */}
               <div className="glass-card rounded-xl p-6">
-                <h3 className="font-semibold mb-4">Statistics</h3>
+                <h3 className="font-semibold text-foreground mb-4">Statistics</h3>
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Likes</span>
-                    <span className="font-semibold">{note.likes}</span>
+                    <span className="font-semibold text-foreground">{note.likes}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">
                       Downloads
                     </span>
-                    <span className="font-semibold">{note.downloads}</span>
+                    <span className="font-semibold text-foreground">{note.downloads}</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">
                       Comments
                     </span>
-                    <span className="font-semibold">{comments.length}</span>
+                    <span className="font-semibold text-foreground">{comments.length}</span>
                   </div>
                 </div>
               </div>
 
               {/* Related Notes */}
               <div className="glass-card rounded-xl p-6">
-                <h3 className="font-semibold mb-4">Related Notes</h3>
+                <h3 className="font-semibold text-foreground mb-4">Related Notes</h3>
                 <div className="space-y-3">
                   <Link
                     to="/note/2"
