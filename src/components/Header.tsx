@@ -28,16 +28,16 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm font-medium hover:text-primary transition-smooth">
+            <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
               Home
             </Link>
-            <Link to="/browse" className="text-sm font-medium hover:text-primary transition-smooth">
+            <Link to="/browse" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
               Browse Notes
             </Link>
-            <Link to="/upload" className="text-sm font-medium hover:text-primary transition-smooth">
+            <Link to="/upload" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
               Upload
             </Link>
-            <Link to="/dashboard" className="text-sm font-medium hover:text-primary transition-smooth">
+            <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
               Dashboard
             </Link>
           </nav>
@@ -81,32 +81,32 @@ export const Header = () => {
         </div>
 
         {/* Mobile Menu */}
-        {mobileMenuOpen && (
+          {mobileMenuOpen && (
           <nav className="md:hidden mt-4 pb-4 space-y-4 animate-fade-in">
             <Link
               to="/"
-              className="block text-sm font-medium hover:text-primary transition-smooth"
+              className="block text-sm font-medium text-foreground hover:text-primary transition-smooth"
               onClick={() => setMobileMenuOpen(false)}
             >
               Home
             </Link>
             <Link
               to="/browse"
-              className="block text-sm font-medium hover:text-primary transition-smooth"
+              className="block text-sm font-medium text-foreground hover:text-primary transition-smooth"
               onClick={() => setMobileMenuOpen(false)}
             >
               Browse Notes
             </Link>
             <Link
               to="/upload"
-              className="block text-sm font-medium hover:text-primary transition-smooth"
+              className="block text-sm font-medium text-foreground hover:text-primary transition-smooth"
               onClick={() => setMobileMenuOpen(false)}
             >
               Upload
             </Link>
             <Link
               to="/dashboard"
-              className="block text-sm font-medium hover:text-primary transition-smooth"
+              className="block text-sm font-medium text-foreground hover:text-primary transition-smooth"
               onClick={() => setMobileMenuOpen(false)}
             >
               Dashboard

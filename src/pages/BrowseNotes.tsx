@@ -109,7 +109,7 @@ const BrowseNotes = () => {
       <div className="flex-1 container mx-auto px-4 py-8">
         {/* Page Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold mb-2">Browse Notes</h1>
+          <h1 className="text-4xl font-bold text-foreground mb-2">Browse Notes</h1>
           <p className="text-muted-foreground">
             Search and filter through thousands of study materials
           </p>

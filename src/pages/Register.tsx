@@ -31,20 +31,20 @@ const Register = () => {
   const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-gradient-to-br from-primary/10 via-accent/5 to-transparent">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
       <div className="w-full max-w-md">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
           <div className="p-2 rounded-lg bg-primary/10">
             <BookOpen className="h-8 w-8 text-primary" />
           </div>
-          <span className="text-2xl font-bold">NotesHub</span>
+          <span className="text-2xl font-bold text-foreground">NotesHub</span>
         </Link>
 
         {/* Register Form */}
         <div className="glass-card rounded-2xl p-8 animate-fade-in">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold mb-2">Create Account</h1>
+            <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
             <p className="text-muted-foreground">Join the learning community</p>
           </div>
 

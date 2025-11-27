@@ -81,7 +81,7 @@ const Dashboard = () => {
 
             {/* User Info */}
             <div className="flex-1 text-center md:text-left">
-              <h1 className="text-3xl font-bold mb-2">{user.name}</h1>
+              <h1 className="text-3xl font-bold text-foreground mb-2">{user.name}</h1>
               <p className="text-muted-foreground mb-4">{user.email}</p>
               <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm">
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-muted">
@@ -134,7 +134,7 @@ const Dashboard = () => {
 
           <TabsContent value="uploads" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">My Uploads ({myUploads.length})</h2>
+              <h2 className="text-2xl font-bold text-foreground">My Uploads ({myUploads.length})</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {myUploads.map((note) => (
@@ -145,7 +145,7 @@ const Dashboard = () => {
 
           <TabsContent value="saved" className="space-y-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold">Saved Notes ({savedNotes.length})</h2>
+              <h2 className="text-2xl font-bold text-foreground">Saved Notes ({savedNotes.length})</h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {savedNotes.map((note) => (

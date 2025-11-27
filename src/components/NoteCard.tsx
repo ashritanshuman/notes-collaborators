@@ -34,7 +34,7 @@ export const NoteCard = ({
         {/* Header */}
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <h3 className="font-semibold text-lg mb-2 line-clamp-2">{title}</h3>
+            <h3 className="font-semibold text-lg text-foreground mb-2 line-clamp-2">{title}</h3>
             <p className="text-sm text-muted-foreground">{subject}</p>
           </div>
           <Badge variant="secondary" className="ml-2">

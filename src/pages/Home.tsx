@@ -114,7 +114,7 @@ const Home = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Choose NotesHub?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Why Choose NotesHub?</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               The best platform for collaborative learning and knowledge sharing
             </p>
@@ -128,7 +128,7 @@ const Home = () => {
                 <div className="inline-flex p-3 rounded-lg bg-primary/10">
                   <feature.icon className="h-6 w-6 text-primary" />
                 </div>
-                <h3 className="font-semibold text-lg">{feature.title}</h3>
+                <h3 className="font-semibold text-lg text-foreground">{feature.title}</h3>
                 <p className="text-sm text-muted-foreground">{feature.description}</p>
               </div>
             ))}
@@ -141,7 +141,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold mb-2">Top Downloaded Notes</h2>
+              <h2 className="text-3xl font-bold text-foreground mb-2">Top Downloaded Notes</h2>
               <p className="text-muted-foreground">Most popular study materials this week</p>
             </div>
             <Link to="/browse">
@@ -163,7 +163,7 @@ const Home = () => {
       <section className="py-20 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Top Contributors</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Top Contributors</h2>
             <p className="text-muted-foreground">Amazing students making learning better for everyone</p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
@@ -173,7 +173,7 @@ const Home = () => {
                   {contributor.name.charAt(0)}
                 </div>
                 <div>
-                  <h3 className="font-semibold">{contributor.name}</h3>
+                  <h3 className="font-semibold text-foreground">{contributor.name}</h3>
                   <p className="text-sm text-muted-foreground">{contributor.uploads} uploads</p>
                 </div>
                 <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">
@@ -191,7 +191,7 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <div className="glass-card rounded-2xl p-12 text-center max-w-4xl mx-auto">
             <TrendingUp className="h-12 w-12 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold mb-4">Ready to Start Learning?</h2>
+            <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Start Learning?</h2>
             <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
               Join thousands of students sharing and accessing quality study materials. Upload your notes and help the community grow.
             </p>
