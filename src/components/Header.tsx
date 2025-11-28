@@ -17,28 +17,32 @@ export const Header = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <Link to="/" className="flex items-center gap-2 group">
-            <div className="p-2 rounded-lg bg-primary/10 group-hover:bg-primary/20 transition-smooth">
-              <BookOpen className="h-6 w-6 text-primary" />
+          <Link to="/" className="flex items-center gap-3 group">
+            <div className="p-2 rounded-xl gradient-primary group-hover:scale-110 transition-smooth">
+              <BookOpen className="h-6 w-6 text-primary-foreground" />
             </div>
-            <span className="text-xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
+            <span className="text-2xl font-heading font-bold gradient-text">
               NotesHub
             </span>
           </Link>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
-            <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
+            <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-smooth relative group">
               Home
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/browse" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
+            <Link to="/browse" className="text-sm font-medium text-foreground hover:text-primary transition-smooth relative group">
               Browse Notes
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/upload" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
+            <Link to="/upload" className="text-sm font-medium text-foreground hover:text-primary transition-smooth relative group">
               Upload
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
-            <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-smooth">
+            <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-smooth relative group">
               Dashboard
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary transition-all duration-300 group-hover:w-full"></span>
             </Link>
           </nav>
 
@@ -48,15 +52,15 @@ export const Header = () => {
               variant="ghost"
               size="icon"
               onClick={toggleDarkMode}
-              className="rounded-full"
+              className="rounded-full hover:scale-110 transition-smooth glass"
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
             <Link to="/login">
-              <Button variant="ghost">Login</Button>
+              <Button variant="ghost" className="hover-lift">Login</Button>
             </Link>
             <Link to="/register">
-              <Button className="gradient-primary">Get Started</Button>
+              <Button className="gradient-primary hover-glow">Get Started</Button>
             </Link>
           </div>
 

@@ -81,27 +81,33 @@ const Home = () => {
       <Header />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32 bg-background dark:bg-gradient-to-br dark:from-black dark:via-gray-900 dark:to-black">
+      <section className="relative overflow-hidden py-32 md:py-40 gradient-subtle">
+        {/* Ambient background effects */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float delay-200"></div>
+        </div>
+        
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-4xl mx-auto text-center space-y-8 animate-fade-in">
-            <h1 className="text-4xl md:text-6xl font-bold leading-tight text-foreground">
-              Collaborative Notes for
-              <span className="block bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                Students
+          <div className="max-w-5xl mx-auto text-center space-y-10">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-tight animate-fade-in">
+              <span className="text-foreground">Collaborative Notes for</span>
+              <span className="block mt-2 gradient-text">
+                Modern Students
               </span>
             </h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Share, discover, and download quality study notes from students across all branches and semesters.
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in delay-100">
+              Share, discover, and download quality study notes from students across all branches and semesters. Join the future of collaborative learning.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6 animate-fade-in delay-200">
               <Link to="/browse">
-                <Button size="lg" className="gradient-primary group">
+                <Button size="lg" className="gradient-primary group hover-glow text-base px-8 py-6 h-auto">
                   Browse Notes
                   <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
                 </Button>
               </Link>
               <Link to="/upload">
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="glass text-base px-8 py-6 h-auto hover-lift">
                   Upload Notes
                 </Button>
               </Link>
@@ -111,25 +117,27 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Why Choose NotesHub?</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+              Why Choose <span className="gradient-text">NotesHub</span>?
+            </h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               The best platform for collaborative learning and knowledge sharing
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="glass-card p-6 rounded-xl text-center space-y-4 hover-lift"
+                className="glass-card p-8 rounded-2xl text-center space-y-5 hover-lift hover-glow transition-smooth group"
               >
-                <div className="inline-flex p-3 rounded-lg bg-primary/10">
-                  <feature.icon className="h-6 w-6 text-primary" />
+                <div className="inline-flex p-4 rounded-2xl bg-gradient-primary group-hover:scale-110 transition-transform duration-300">
+                  <feature.icon className="h-7 w-7 text-primary-foreground" />
                 </div>
-                <h3 className="font-semibold text-lg text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <h3 className="font-heading font-semibold text-xl text-foreground">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -137,46 +145,52 @@ const Home = () => {
       </section>
 
       {/* Top Downloaded Notes */}
-      <section className="py-20">
+      <section className="py-24 gradient-subtle">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">Top Downloaded Notes</h2>
-              <p className="text-muted-foreground">Most popular study materials this week</p>
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-3">
+                Top <span className="gradient-text">Downloaded</span> Notes
+              </h2>
+              <p className="text-lg text-muted-foreground">Most popular study materials this week</p>
             </div>
             <Link to="/browse">
-              <Button variant="ghost">
+              <Button variant="ghost" className="hover-lift text-base">
                 View All
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {topNotes.map((note) => (
-              <NoteCard key={note.id} {...note} />
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {topNotes.map((note, index) => (
+              <div key={note.id} className={`animate-fade-in delay-${index * 100}`}>
+                <NoteCard {...note} />
+              </div>
             ))}
           </div>
         </div>
       </section>
 
       {/* Top Contributors */}
-      <section className="py-20 bg-muted/30">
+      <section className="py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-foreground mb-4">Top Contributors</h2>
-            <p className="text-muted-foreground">Amazing students making learning better for everyone</p>
+          <div className="text-center mb-16 animate-fade-in">
+            <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+              Top <span className="gradient-text">Contributors</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">Amazing students making learning better for everyone</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             {topContributors.map((contributor, index) => (
-              <div key={index} className="glass-card p-6 rounded-xl text-center space-y-4">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary to-accent mx-auto flex items-center justify-center text-white font-bold text-xl">
+              <div key={index} className={`glass-card p-8 rounded-2xl text-center space-y-6 hover-lift hover-glow animate-scale-in delay-${index * 100}`}>
+                <div className="w-20 h-20 rounded-full gradient-primary mx-auto flex items-center justify-center text-primary-foreground font-heading font-bold text-2xl hover:scale-110 transition-transform duration-300">
                   {contributor.name.charAt(0)}
                 </div>
                 <div>
-                  <h3 className="font-semibold text-foreground">{contributor.name}</h3>
-                  <p className="text-sm text-muted-foreground">{contributor.uploads} uploads</p>
+                  <h3 className="font-heading font-semibold text-lg text-foreground">{contributor.name}</h3>
+                  <p className="text-sm text-muted-foreground mt-1">{contributor.uploads} uploads</p>
                 </div>
-                <div className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary/10 text-primary text-sm">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-foreground text-sm font-medium">
                   <Award className="h-4 w-4" />
                   {contributor.badge}
                 </div>
@@ -187,25 +201,33 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20">
+      <section className="py-24 gradient-subtle">
         <div className="container mx-auto px-4">
-          <div className="glass-card rounded-2xl p-12 text-center max-w-4xl mx-auto">
-            <TrendingUp className="h-12 w-12 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-foreground mb-4">Ready to Start Learning?</h2>
-            <p className="text-muted-foreground mb-8 max-w-2xl mx-auto">
-              Join thousands of students sharing and accessing quality study materials. Upload your notes and help the community grow.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/register">
-                <Button size="lg" className="gradient-primary">
-                  Create Account
-                </Button>
-              </Link>
-              <Link to="/browse">
-                <Button size="lg" variant="outline">
-                  Explore Notes
-                </Button>
-              </Link>
+          <div className="glass-intense rounded-3xl p-16 text-center max-w-4xl mx-auto hover-lift animate-fade-in relative overflow-hidden">
+            {/* Decorative elements */}
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
+            
+            <div className="relative z-10">
+              <TrendingUp className="h-16 w-16 text-foreground mx-auto mb-8 animate-float" />
+              <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
+                Ready to Start <span className="gradient-text">Learning</span>?
+              </h2>
+              <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                Join thousands of students sharing and accessing quality study materials. Upload your notes and help the community grow.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Link to="/register">
+                  <Button size="lg" className="gradient-primary hover-glow text-base px-8 py-6 h-auto">
+                    Create Account
+                  </Button>
+                </Link>
+                <Link to="/browse">
+                  <Button size="lg" variant="outline" className="glass text-base px-8 py-6 h-auto hover-lift">
+                    Explore Notes
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
