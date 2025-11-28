@@ -44,7 +44,12 @@ All colors MUST be HSL.
     
     /* Gradients */
     --gradient-start: 0 0% 0%;
-    --gradient-end: 0 0% 20%;
+    --gradient-mid: 0 0% 30%;
+    --gradient-end: 0 0% 50%;
+    
+    /* Glow effects */
+    --glow-color: 0 0% 100%;
+    --glow-intensity: 0.2;
 
     --sidebar-background: 0 0% 98%;
     --sidebar-foreground: 0 0% 10%;
@@ -57,7 +62,7 @@ All colors MUST be HSL.
   }
 
   .dark {
-    --background: 0 0% 5%;
+    --background: 0 0% 3%;
     --foreground: 0 0% 98%;
 
     --card: 0 0% 8%;
@@ -69,7 +74,7 @@ All colors MUST be HSL.
     --primary: 0 0% 100%;
     --primary-foreground: 0 0% 0%;
 
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 12%;
     --secondary-foreground: 0 0% 98%;
 
     --muted: 0 0% 15%;
@@ -81,13 +86,22 @@ All colors MUST be HSL.
     --destructive: 0 63% 31%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 0 0% 15%;
+    --border: 0 0% 20%;
     --input: 0 0% 15%;
     --ring: 0 0% 100%;
 
     /* Glass effect colors for dark mode */
-    --glass-bg: 0 0% 8%;
+    --glass-bg: 0 0% 5%;
     --glass-border: 0 0% 100%;
+    
+    /* Dark mode gradients */
+    --gradient-start: 0 0% 0%;
+    --gradient-mid: 0 0% 15%;
+    --gradient-end: 0 0% 30%;
+    
+    /* Dark mode glow */
+    --glow-color: 0 0% 100%;
+    --glow-intensity: 0.3;
 
     --sidebar-background: 0 0% 5%;
     --sidebar-foreground: 0 0% 96%;
@@ -106,59 +120,107 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground font-sans antialiased;
+    @apply bg-background text-foreground font-sans antialiased transition-colors-smooth;
+  }
+  
+  * {
+    @apply transition-colors-smooth;
   }
 }
 
 @layer utilities {
-  /* Glass morphism effect */
+  /* Glass morphism effects */
   .glass {
-    background: hsl(var(--glass-bg) / 0.7);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border: 1px solid hsl(var(--glass-border) / 0.18);
+    background: hsl(var(--glass-bg) / 0.4);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid hsl(var(--glass-border) / 0.1);
   }
 
   .glass-card {
-    background: hsl(var(--glass-bg) / 0.6);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid hsl(var(--glass-border) / 0.2);
-    box-shadow: 0 8px 32px 0 hsl(var(--primary) / 0.1);
+    background: hsl(var(--glass-bg) / 0.3);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid hsl(var(--glass-border) / 0.15);
+    box-shadow: 
+      0 8px 32px 0 hsl(var(--primary) / 0.08),
+      inset 0 1px 0 0 hsl(var(--glass-border) / 0.1);
   }
 
   .glass-header {
-    background: hsl(var(--glass-bg) / 0.8);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid hsl(var(--border) / 0.5);
+    background: hsl(var(--glass-bg) / 0.6);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid hsl(var(--border) / 0.3);
+  }
+  
+  .glass-intense {
+    background: hsl(var(--glass-bg) / 0.2);
+    backdrop-filter: blur(40px) saturate(200%);
+    -webkit-backdrop-filter: blur(40px) saturate(200%);
+    border: 1px solid hsl(var(--glass-border) / 0.2);
+    box-shadow: 
+      0 16px 48px 0 hsl(var(--primary) / 0.12),
+      inset 0 1px 0 0 hsl(var(--glass-border) / 0.2);
   }
 
   /* Gradient backgrounds */
   .gradient-primary {
     background: linear-gradient(135deg, hsl(var(--gradient-start)), hsl(var(--gradient-end)));
   }
+  
+  .gradient-text {
+    background: linear-gradient(135deg, hsl(var(--gradient-end)), hsl(var(--foreground)));
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .gradient-subtle {
+    background: linear-gradient(180deg, 
+      hsl(var(--background)), 
+      hsl(var(--muted) / 0.3)
+    );
+  }
 
   /* Smooth transitions */
   .transition-smooth {
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .transition-colors-smooth {
+    transition: background-color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                color 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                border-color 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Hover effects */
   .hover-lift {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), 
+                box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .hover-lift:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 24px hsl(var(--primary) / 0.15);
+    transform: translateY(-8px);
+    box-shadow: 
+      0 20px 40px hsl(var(--primary) / 0.15),
+      0 0 0 1px hsl(var(--glass-border) / 0.2);
+  }
+  
+  .hover-glow {
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .hover-glow:hover {
+    box-shadow: 0 0 30px hsl(var(--glow-color) / var(--glow-intensity));
   }
 
   /* Animations */
   @keyframes fade-in {
     from {
       opacity: 0;
-      transform: translateY(10px);
+      transform: translateY(20px);
     }
     to {
       opacity: 1;
@@ -169,19 +231,64 @@ All colors MUST be HSL.
   @keyframes slide-in {
     from {
       opacity: 0;
-      transform: translateX(-20px);
+      transform: translateX(-30px);
     }
     to {
       opacity: 1;
       transform: translateX(0);
     }
   }
+  
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
 
   .animate-fade-in {
-    animation: fade-in 0.5s ease-out forwards;
+    animation: fade-in 0.6s ease-out forwards;
   }
 
   .animate-slide-in {
-    animation: slide-in 0.5s ease-out forwards;
+    animation: slide-in 0.6s ease-out forwards;
+  }
+  
+  .animate-scale-in {
+    animation: scale-in 0.5s ease-out forwards;
+  }
+  
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Staggered animation delays */
+  .delay-100 {
+    animation-delay: 0.1s;
+  }
+  
+  .delay-200 {
+    animation-delay: 0.2s;
+  }
+  
+  .delay-300 {
+    animation-delay: 0.3s;
+  }
+  
+  .delay-400 {
+    animation-delay: 0.4s;
   }
 }
