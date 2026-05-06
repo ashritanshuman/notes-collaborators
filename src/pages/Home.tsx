@@ -8,6 +8,7 @@ import { PageTransition } from "@/components/motion/PageTransition";
 import { ParallaxSection } from "@/components/motion/ParallaxSection";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 import { Tilt3DCard } from "@/components/motion/Tilt3DCard";
+import { ParticleBackground } from "@/components/motion/ParticleBackground";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const Home = () => {
@@ -93,24 +94,26 @@ const Home = () => {
 
       {/* Hero Section */}
       <section className="relative overflow-hidden py-32 md:py-40 gradient-subtle">
+        {/* Particle background */}
+        <ParticleBackground />
         {/* Ambient background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <motion.div style={{ y: blob1Y }} className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></motion.div>
           <motion.div style={{ y: blob2Y }} className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float delay-200"></motion.div>
         </div>
         
-        <div className="container mx-auto px-4 relative">
+        <div className="container mx-auto px-4 relative pointer-events-none">
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-5xl mx-auto text-center space-y-10">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-tight animate-fade-in">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-tight animate-fade-in pointer-events-auto">
               <span className="text-foreground">Collaborative Notes for</span>
               <span className="block mt-2 gradient-text">
                 Modern Students
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in delay-100">
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in delay-100 pointer-events-auto">
               Share, discover, and download quality study notes from students across all branches and semesters. Join the future of collaborative learning.
             </p>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6 animate-fade-in delay-200">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6 animate-fade-in delay-200 pointer-events-auto">
               <Link to="/browse">
                 <Button size="lg" className="gradient-primary group hover-glow text-base px-8 py-6 h-auto">
                   Browse Notes
