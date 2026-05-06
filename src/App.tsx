@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
+import { PageTransition } from "@/components/motion/PageTransition";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import BrowseNotes from "./pages/BrowseNotes";
@@ -18,19 +19,20 @@ const queryClient = new QueryClient();
 
 const AnimatedRoutes = () => {
   const location = useLocation();
+  const wrap = (node: React.ReactNode) => <PageTransition>{node}</PageTransition>;
   return (
     <AnimatePresence mode="wait">
       <Routes location={location} key={location.pathname}>
         <Route path="/" element={<Index />} />
-        <Route path="/browse" element={<BrowseNotes />} />
-        <Route path="/upload" element={<UploadNotes />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/admin" element={<AdminDashboard />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/note/:id" element={<NoteDetail />} />
+        <Route path="/browse" element={wrap(<BrowseNotes />)} />
+        <Route path="/upload" element={wrap(<UploadNotes />)} />
+        <Route path="/dashboard" element={wrap(<Dashboard />)} />
+        <Route path="/admin" element={wrap(<AdminDashboard />)} />
+        <Route path="/login" element={wrap(<Login />)} />
+        <Route path="/register" element={wrap(<Register />)} />
+        <Route path="/note/:id" element={wrap(<NoteDetail />)} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-        <Route path="*" element={<NotFound />} />
+        <Route path="*" element={wrap(<NotFound />)} />
       </Routes>
     </AnimatePresence>
   );
