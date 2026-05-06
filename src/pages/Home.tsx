@@ -4,8 +4,18 @@ import { Button } from "@/components/ui/button";
 import { NoteCard } from "@/components/NoteCard";
 import { ArrowRight, BookOpen, Users, TrendingUp, Shield, Zap, Award } from "lucide-react";
 import { Link } from "react-router-dom";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { ParallaxSection } from "@/components/motion/ParallaxSection";
+import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
+import { Tilt3DCard } from "@/components/motion/Tilt3DCard";
+import { motion, useScroll, useTransform } from "framer-motion";
 
 const Home = () => {
+  const { scrollY } = useScroll();
+  const heroY = useTransform(scrollY, [0, 600], [0, 150]);
+  const heroOpacity = useTransform(scrollY, [0, 500], [1, 0]);
+  const blob1Y = useTransform(scrollY, [0, 800], [0, -120]);
+  const blob2Y = useTransform(scrollY, [0, 800], [0, 180]);
   // Mock data for top notes
   const topNotes = [
     {
@@ -77,6 +87,7 @@ const Home = () => {
   ];
 
   return (
+    <PageTransition>
     <div className="min-h-screen flex flex-col">
       <Header />
 
@@ -84,12 +95,12 @@ const Home = () => {
       <section className="relative overflow-hidden py-32 md:py-40 gradient-subtle">
         {/* Ambient background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float delay-200"></div>
+          <motion.div style={{ y: blob1Y }} className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></motion.div>
+          <motion.div style={{ y: blob2Y }} className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float delay-200"></motion.div>
         </div>
         
         <div className="container mx-auto px-4 relative">
-          <div className="max-w-5xl mx-auto text-center space-y-10">
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-5xl mx-auto text-center space-y-10">
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-tight animate-fade-in">
               <span className="text-foreground">Collaborative Notes for</span>
               <span className="block mt-2 gradient-text">
@@ -112,33 +123,32 @@ const Home = () => {
                 </Button>
               </Link>
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Features Section */}
       <section className="py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <RevealOnScroll className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
               Why Choose <span className="gradient-text">NotesHub</span>?
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               The best platform for collaborative learning and knowledge sharing
             </p>
-          </div>
+          </RevealOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
-              <div
-                key={index}
-                className="glass-card p-8 rounded-2xl text-center space-y-5 hover-lift hover-glow transition-smooth group"
-              >
-                <div className="inline-flex p-4 rounded-2xl bg-gradient-primary group-hover:scale-110 transition-transform duration-300">
-                  <feature.icon className="h-7 w-7 text-primary-foreground" />
-                </div>
-                <h3 className="font-heading font-semibold text-xl text-foreground">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
-              </div>
+              <RevealOnScroll key={index} delay={index * 0.1}>
+                <Tilt3DCard className="glass-card p-8 rounded-2xl text-center space-y-5 hover-glow transition-smooth group h-full">
+                  <div className="inline-flex p-4 rounded-2xl bg-gradient-primary group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="h-7 w-7 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-heading font-semibold text-xl text-foreground">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
+                </Tilt3DCard>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
@@ -147,7 +157,7 @@ const Home = () => {
       {/* Top Downloaded Notes */}
       <section className="py-24 gradient-subtle">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-12">
+          <RevealOnScroll className="flex items-center justify-between mb-12">
             <div>
               <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-3">
                 Top <span className="gradient-text">Downloaded</span> Notes
@@ -160,12 +170,14 @@ const Home = () => {
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
-          </div>
+          </RevealOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {topNotes.map((note, index) => (
-              <div key={note.id} className={`animate-fade-in delay-${index * 100}`}>
-                <NoteCard {...note} />
-              </div>
+              <RevealOnScroll key={note.id} delay={index * 0.12}>
+                <Tilt3DCard intensity={8}>
+                  <NoteCard {...note} />
+                </Tilt3DCard>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
@@ -174,27 +186,29 @@ const Home = () => {
       {/* Top Contributors */}
       <section className="py-24 relative">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-16 animate-fade-in">
+          <RevealOnScroll className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
               Top <span className="gradient-text">Contributors</span>
             </h2>
             <p className="text-lg text-muted-foreground">Amazing students making learning better for everyone</p>
-          </div>
+          </RevealOnScroll>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-5xl mx-auto">
             {topContributors.map((contributor, index) => (
-              <div key={index} className={`glass-card p-8 rounded-2xl text-center space-y-6 hover-lift hover-glow animate-scale-in delay-${index * 100}`}>
-                <div className="w-20 h-20 rounded-full gradient-primary mx-auto flex items-center justify-center text-primary-foreground font-heading font-bold text-2xl hover:scale-110 transition-transform duration-300">
-                  {contributor.name.charAt(0)}
-                </div>
-                <div>
-                  <h3 className="font-heading font-semibold text-lg text-foreground">{contributor.name}</h3>
-                  <p className="text-sm text-muted-foreground mt-1">{contributor.uploads} uploads</p>
-                </div>
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-foreground text-sm font-medium">
-                  <Award className="h-4 w-4" />
-                  {contributor.badge}
-                </div>
-              </div>
+              <RevealOnScroll key={index} delay={index * 0.1}>
+                <Tilt3DCard className="glass-card p-8 rounded-2xl text-center space-y-6 hover-glow h-full">
+                  <div className="w-20 h-20 rounded-full gradient-primary mx-auto flex items-center justify-center text-primary-foreground font-heading font-bold text-2xl hover:scale-110 transition-transform duration-300">
+                    {contributor.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="font-heading font-semibold text-lg text-foreground">{contributor.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">{contributor.uploads} uploads</p>
+                  </div>
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-foreground text-sm font-medium">
+                    <Award className="h-4 w-4" />
+                    {contributor.badge}
+                  </div>
+                </Tilt3DCard>
+              </RevealOnScroll>
             ))}
           </div>
         </div>
@@ -203,7 +217,7 @@ const Home = () => {
       {/* CTA Section */}
       <section className="py-24 gradient-subtle">
         <div className="container mx-auto px-4">
-          <div className="glass-intense rounded-3xl p-16 text-center max-w-4xl mx-auto hover-lift animate-fade-in relative overflow-hidden">
+          <RevealOnScroll className="glass-intense rounded-3xl p-16 text-center max-w-4xl mx-auto hover-lift relative overflow-hidden">
             {/* Decorative elements */}
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl"></div>
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
@@ -229,12 +243,13 @@ const Home = () => {
                 </Link>
               </div>
             </div>
-          </div>
+          </RevealOnScroll>
         </div>
       </section>
 
       <Footer />
     </div>
+    </PageTransition>
   );
 };
 
