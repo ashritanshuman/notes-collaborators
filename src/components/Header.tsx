@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Moon, Sun, Menu, X } from "lucide-react";
 import { useState } from "react";
+import { AnimatedSearchBar } from "@/components/AnimatedSearchBar";
 
 export const Header = () => {
   const [darkMode, setDarkMode] = useState(false);
@@ -48,6 +49,7 @@ export const Header = () => {
 
           {/* Actions */}
           <div className="hidden md:flex items-center gap-4">
+            <AnimatedSearchBar />
             <Button
               variant="ghost"
               size="icon"
