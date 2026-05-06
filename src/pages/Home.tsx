@@ -9,6 +9,7 @@ import { ParallaxSection } from "@/components/motion/ParallaxSection";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 import { Tilt3DCard } from "@/components/motion/Tilt3DCard";
 import { ParticleBackground } from "@/components/motion/ParticleBackground";
+import { FloatingNavDots } from "@/components/FloatingNavDots";
 import { motion, useScroll, useTransform } from "framer-motion";
 
 const Home = () => {
@@ -91,9 +92,18 @@ const Home = () => {
     <PageTransition>
     <div className="min-h-screen flex flex-col">
       <Header />
+      <FloatingNavDots
+        sections={[
+          { id: "hero", label: "Home" },
+          { id: "features", label: "Features" },
+          { id: "top-notes", label: "Top Notes" },
+          { id: "contributors", label: "Contributors" },
+          { id: "cta", label: "Get Started" },
+        ]}
+      />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden py-32 md:py-40 gradient-subtle">
+      <section id="hero" className="relative overflow-hidden py-32 md:py-40 gradient-subtle scroll-mt-20">
         {/* Particle background */}
         <ParticleBackground />
         {/* Ambient background effects */}
@@ -131,7 +141,7 @@ const Home = () => {
       </section>
 
       {/* Features Section */}
-      <section className="py-24 relative">
+      <section id="features" className="py-24 relative scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
@@ -158,7 +168,7 @@ const Home = () => {
       </section>
 
       {/* Top Downloaded Notes */}
-      <section className="py-24 gradient-subtle">
+      <section id="top-notes" className="py-24 gradient-subtle scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="flex items-center justify-between mb-12">
             <div>
@@ -187,7 +197,7 @@ const Home = () => {
       </section>
 
       {/* Top Contributors */}
-      <section className="py-24 relative">
+      <section id="contributors" className="py-24 relative scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="text-center mb-16">
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
@@ -218,7 +228,7 @@ const Home = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 gradient-subtle">
+      <section id="cta" className="py-24 gradient-subtle scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="glass-intense rounded-3xl p-16 text-center max-w-4xl mx-auto hover-lift relative overflow-hidden">
             {/* Decorative elements */}
