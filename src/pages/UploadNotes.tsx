@@ -14,6 +14,8 @@ import {
 import { Label } from "@/components/ui/label";
 import { Upload, FileText, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 
 const UploadNotes = () => {
   const { toast } = useToast();
@@ -49,12 +51,13 @@ const UploadNotes = () => {
 
   if (uploadSuccess) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen flex flex-col gradient-subtle">
         <Header />
+        <PageTransition>
         <div className="flex-1 flex items-center justify-center container mx-auto px-4 py-20">
-          <div className="glass-card rounded-2xl p-12 text-center max-w-2xl animate-fade-in">
-            <CheckCircle2 className="h-20 w-20 text-primary mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-foreground mb-4">Upload Successful!</h2>
+          <div className="glass-intense rounded-2xl p-12 text-center max-w-2xl animate-fade-in hover-lift">
+            <CheckCircle2 className="h-20 w-20 text-primary mx-auto mb-6 animate-float" />
+            <h2 className="text-3xl font-bold gradient-text mb-4">Upload Successful!</h2>
             <p className="text-muted-foreground mb-8">
               Your notes have been uploaded and will be available to students after review.
             </p>
@@ -62,33 +65,36 @@ const UploadNotes = () => {
               <Button onClick={() => setUploadSuccess(false)}>
                 Upload More
               </Button>
-              <Button variant="outline" onClick={() => window.location.href = "/browse"}>
+              <Button variant="glass" onClick={() => window.location.href = "/browse"}>
                 Browse Notes
               </Button>
             </div>
           </div>
         </div>
+        </PageTransition>
         <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gradient-subtle">
       <Header />
 
+      <PageTransition>
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="max-w-3xl mx-auto">
           {/* Header */}
-          <div className="mb-8 text-center">
-            <h1 className="text-4xl font-bold text-foreground mb-2">Upload Notes</h1>
-            <p className="text-muted-foreground">
+          <RevealOnScroll className="mb-8 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-3 tracking-tight">Upload Notes</h1>
+            <p className="text-muted-foreground text-lg">
               Share your study materials with the community
             </p>
-          </div>
+          </RevealOnScroll>
 
           {/* Upload Form */}
-          <form onSubmit={handleSubmit} className="glass-card rounded-xl p-8 space-y-6">
+          <RevealOnScroll delay={0.1}>
+          <form onSubmit={handleSubmit} className="glass-intense rounded-2xl p-8 space-y-6">
             {/* Title */}
             <div className="space-y-2">
               <Label htmlFor="title">Note Title *</Label>
@@ -204,13 +210,13 @@ const UploadNotes = () => {
             {/* Submit Button */}
             <Button
               type="submit"
-              className="w-full gradient-primary"
+              className="w-full"
               size="lg"
               disabled={uploading}
             >
               {uploading ? (
                 <>
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground mr-2" />
                   Uploading...
                 </>
               ) : (
@@ -225,8 +231,10 @@ const UploadNotes = () => {
               By uploading, you agree to our terms and confirm that you have the right to share this content.
             </p>
           </form>
+          </RevealOnScroll>
         </div>
       </div>
+      </PageTransition>
 
       <Footer />
     </div>
