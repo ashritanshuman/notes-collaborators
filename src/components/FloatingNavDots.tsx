@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export interface NavSection {
   id: string;
@@ -13,6 +13,7 @@ interface FloatingNavDotsProps {
 export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
   const [visible, setVisible] = useState(false);
+  const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -41,6 +42,50 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
     el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const focusIndex = (i: number) => {
+    buttonRefs.current[i]?.focus();
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLButtonElement>, index: number) => {
+    switch (e.key) {
+      case "ArrowDown":
+      case "ArrowRight": {
+        e.preventDefault();
+        const next = (index + 1) % sections.length;
+        focusIndex(next);
+        scrollTo(sections[next].id);
+        break;
+      }
+      case "ArrowUp":
+      case "ArrowLeft": {
+        e.preventDefault();
+        const prev = (index - 1 + sections.length) % sections.length;
+        focusIndex(prev);
+        scrollTo(sections[prev].id);
+        break;
+      }
+      case "Home": {
+        e.preventDefault();
+        focusIndex(0);
+        scrollTo(sections[0].id);
+        break;
+      }
+      case "End": {
+        e.preventDefault();
+        const last = sections.length - 1;
+        focusIndex(last);
+        scrollTo(sections[last].id);
+        break;
+      }
+      case "Enter":
+      case " ": {
+        e.preventDefault();
+        scrollTo(sections[index].id);
+        break;
+      }
+    }
+  };
+
   return (
     <AnimatePresence>
       {visible && (
@@ -52,17 +97,22 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
           aria-label="Section navigation"
           className="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-4 p-3 rounded-full glass-intense ring-1 ring-foreground/10"
         >
-          {sections.map((s) => {
+          {sections.map((s, i) => {
             const isActive = active === s.id;
             return (
               <button
                 key={s.id}
+                ref={(el) => (buttonRefs.current[i] = el)}
                 onClick={() => scrollTo(s.id)}
-                className="group relative flex items-center justify-center"
+                onKeyDown={(e) => handleKeyDown(e, i)}
+                tabIndex={isActive ? 0 : -1}
+                type="button"
+                className="group relative flex items-center justify-center rounded-full p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label={`Jump to ${s.label}`}
                 aria-current={isActive ? "true" : undefined}
               >
                 <motion.span
+                  aria-hidden="true"
                   animate={{
                     scale: isActive ? 1.4 : 1,
                     backgroundColor: isActive
@@ -74,13 +124,14 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
                 />
                 {isActive && (
                   <motion.span
+                    aria-hidden="true"
                     layoutId="nav-dot-ring"
                     className="absolute inset-0 -m-1.5 rounded-full ring-2 ring-foreground/40"
                     transition={{ type: "spring", stiffness: 300, damping: 25 }}
                   />
                 )}
                 {/* Tooltip */}
-                <span className="pointer-events-none absolute right-6 px-3 py-1 rounded-full glass text-xs font-medium text-foreground whitespace-nowrap opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200">
+                <span className="pointer-events-none absolute right-7 px-3 py-1 rounded-full glass text-xs font-medium text-foreground whitespace-nowrap opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 group-focus-visible:opacity-100 group-focus-visible:translate-x-0 transition-all duration-200">
                   {s.label}
                 </span>
               </button>
