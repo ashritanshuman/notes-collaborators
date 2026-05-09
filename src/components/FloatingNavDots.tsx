@@ -1,4 +1,4 @@
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 export interface NavSection {
@@ -14,6 +14,8 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
   const [visible, setVisible] = useState(false);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
+  const { scrollYProgress } = useScroll();
+  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.4 });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -97,6 +99,17 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
           aria-label="Section navigation"
           className="hidden lg:flex fixed right-6 top-1/2 -translate-y-1/2 z-40 flex-col gap-4 p-3 rounded-full glass-intense ring-1 ring-foreground/10"
         >
+          {/* Scroll progress track */}
+          <div
+            aria-hidden="true"
+            className="absolute left-1/2 -translate-x-1/2 top-3 bottom-3 w-px rounded-full bg-foreground/10 overflow-hidden"
+          >
+            <motion.div
+              className="absolute inset-x-0 top-0 bg-foreground rounded-full origin-top"
+              style={{ scaleY: progress, height: "100%" }}
+            />
+          </div>
+
           {sections.map((s, i) => {
             const isActive = active === s.id;
             return (
@@ -107,7 +120,7 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
                 onKeyDown={(e) => handleKeyDown(e, i)}
                 tabIndex={isActive ? 0 : -1}
                 type="button"
-                className="group relative flex items-center justify-center rounded-full p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+                className="group relative z-10 flex items-center justify-center rounded-full p-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground focus-visible:ring-offset-2 focus-visible:ring-offset-background"
                 aria-label={`Jump to ${s.label}`}
                 aria-current={isActive ? "true" : undefined}
               >
@@ -120,7 +133,7 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
                       : "hsl(var(--muted-foreground) / 0.5)",
                   }}
                   transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-                  className="block w-2.5 h-2.5 rounded-full"
+                  className="block w-2.5 h-2.5 rounded-full ring-2 ring-background"
                 />
                 {isActive && (
                   <motion.span
