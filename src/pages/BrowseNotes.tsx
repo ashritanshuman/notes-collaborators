@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/select";
 import { Search, Filter, SlidersHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 
 const BrowseNotes = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -103,20 +105,22 @@ const BrowseNotes = () => {
   const fileTypes = ["all", "PDF", "PPT", "DOCX", "Image"];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gradient-subtle">
       <Header />
 
+      <PageTransition>
       <div className="flex-1 container mx-auto px-4 py-8">
         {/* Page Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Browse Notes</h1>
-          <p className="text-muted-foreground">
+        <RevealOnScroll className="mb-8">
+          <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-3 tracking-tight">Browse Notes</h1>
+          <p className="text-muted-foreground text-lg">
             Search and filter through thousands of study materials
           </p>
-        </div>
+        </RevealOnScroll>
 
         {/* Search and Filters */}
-        <div className="glass-card rounded-xl p-6 mb-8">
+        <RevealOnScroll delay={0.1}>
+        <div className="glass-intense rounded-2xl p-6 mb-8">
           {/* Search Bar */}
           <div className="relative mb-6">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
@@ -227,6 +231,7 @@ const BrowseNotes = () => {
             </div>
           )}
         </div>
+        </RevealOnScroll>
 
         {/* Results */}
         <div className="mb-6 flex items-center justify-between">
@@ -237,11 +242,14 @@ const BrowseNotes = () => {
 
         {/* Notes Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {notes.map((note) => (
-            <NoteCard key={note.id} {...note} />
+          {notes.map((note, i) => (
+            <RevealOnScroll key={note.id} delay={i * 0.05}>
+              <NoteCard {...note} />
+            </RevealOnScroll>
           ))}
         </div>
       </div>
+      </PageTransition>
 
       <Footer />
     </div>

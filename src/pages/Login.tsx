@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BookOpen } from "lucide-react";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { ParticleBackground } from "@/components/motion/ParticleBackground";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -15,20 +17,22 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-background">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 gradient-subtle relative overflow-hidden">
+      <ParticleBackground density={40} className="opacity-60" />
+      <PageTransition>
+      <div className="w-full max-w-md relative z-10">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <BookOpen className="h-8 w-8 text-primary" />
+          <div className="p-2 rounded-lg glass">
+            <BookOpen className="h-8 w-8 text-foreground" />
           </div>
-          <span className="text-2xl font-bold text-foreground">NotesHub</span>
+          <span className="text-2xl font-bold gradient-text">NotesHub</span>
         </Link>
 
         {/* Login Form */}
-        <div className="glass-card rounded-2xl p-8 animate-fade-in">
+        <div className="glass-intense rounded-2xl p-8 animate-fade-in hover-lift">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Welcome Back</h1>
+            <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">Welcome Back</h1>
             <p className="text-muted-foreground">Login to access your account</p>
           </div>
 
@@ -48,7 +52,7 @@ const Login = () => {
             <div className="space-y-2">
               <div className="flex items-center justify-between">
                 <Label htmlFor="password">Password</Label>
-                <a href="#" className="text-sm text-primary hover:underline">
+                <a href="#" className="text-sm text-foreground hover:underline">
                   Forgot password?
                 </a>
               </div>
@@ -62,19 +66,20 @@ const Login = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full gradient-primary" size="lg">
+            <Button type="submit" className="w-full" size="lg">
               Login
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Don't have an account?{" "}
-            <Link to="/register" className="text-primary font-medium hover:underline">
+            <Link to="/register" className="text-foreground font-semibold hover:underline">
               Create one
             </Link>
           </p>
         </div>
       </div>
+      </PageTransition>
     </div>
   );
 };

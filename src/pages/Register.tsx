@@ -11,6 +11,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { BookOpen } from "lucide-react";
+import { PageTransition } from "@/components/motion/PageTransition";
+import { ParticleBackground } from "@/components/motion/ParticleBackground";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -31,20 +33,22 @@ const Register = () => {
   const years = ["1st Year", "2nd Year", "3rd Year", "4th Year"];
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-12 bg-background">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 gradient-subtle relative overflow-hidden">
+      <ParticleBackground density={40} className="opacity-60" />
+      <PageTransition>
+      <div className="w-full max-w-md relative z-10">
         {/* Logo */}
         <Link to="/" className="flex items-center justify-center gap-2 mb-8">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <BookOpen className="h-8 w-8 text-primary" />
+          <div className="p-2 rounded-lg glass">
+            <BookOpen className="h-8 w-8 text-foreground" />
           </div>
-          <span className="text-2xl font-bold text-foreground">NotesHub</span>
+          <span className="text-2xl font-bold gradient-text">NotesHub</span>
         </Link>
 
         {/* Register Form */}
-        <div className="glass-card rounded-2xl p-8 animate-fade-in">
+        <div className="glass-intense rounded-2xl p-8 animate-fade-in hover-lift">
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-foreground mb-2">Create Account</h1>
+            <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">Create Account</h1>
             <p className="text-muted-foreground">Join the learning community</p>
           </div>
 
@@ -148,19 +152,20 @@ const Register = () => {
               />
             </div>
 
-            <Button type="submit" className="w-full gradient-primary" size="lg">
+            <Button type="submit" className="w-full" size="lg">
               Create Account
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="text-primary font-medium hover:underline">
+            <Link to="/login" className="text-foreground font-semibold hover:underline">
               Login
             </Link>
           </p>
         </div>
       </div>
+      </PageTransition>
     </div>
   );
 };
