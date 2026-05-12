@@ -1,5 +1,6 @@
 import { motion, AnimatePresence, useScroll, useSpring } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { Menu, X } from "lucide-react";
 
 export interface NavSection {
   id: string;
@@ -13,6 +14,7 @@ interface FloatingNavDotsProps {
 export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
   const [active, setActive] = useState<string>(sections[0]?.id ?? "");
   const [visible, setVisible] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const buttonRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const { scrollYProgress } = useScroll();
   const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 24, mass: 0.4 });
@@ -42,6 +44,7 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
     const el = document.getElementById(id);
     if (!el) return;
     el.scrollIntoView({ behavior: "smooth", block: "start" });
+    setMobileOpen(false);
   };
 
   const focusIndex = (i: number) => {
@@ -89,9 +92,11 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
   };
 
   return (
-    <AnimatePresence>
-      {visible && (
-        <motion.nav
+    <>
+      {/* Desktop: vertical dot rail */}
+      <AnimatePresence>
+        {visible && (
+          <motion.nav
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 20 }}
@@ -150,8 +155,77 @@ export const FloatingNavDots = ({ sections }: FloatingNavDotsProps) => {
               </button>
             );
           })}
-        </motion.nav>
-      )}
-    </AnimatePresence>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile: collapsible toggle */}
+      <AnimatePresence>
+        {visible && (
+          <motion.div
+            key="mobile-nav"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="lg:hidden fixed right-4 bottom-4 z-40 flex flex-col items-end gap-3"
+          >
+            <AnimatePresence>
+              {mobileOpen && (
+                <motion.ul
+                  initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                  animate={{ opacity: 1, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
+                  role="menu"
+                  aria-label="Jump to section"
+                  className="flex flex-col gap-1 p-2 rounded-2xl glass-intense ring-1 ring-foreground/10 min-w-[180px]"
+                >
+                  {sections.map((s) => {
+                    const isActive = active === s.id;
+                    return (
+                      <li key={s.id} role="none">
+                        <button
+                          type="button"
+                          role="menuitem"
+                          onClick={() => scrollTo(s.id)}
+                          aria-current={isActive ? "true" : undefined}
+                          className={`w-full text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground ${
+                            isActive
+                              ? "bg-foreground text-background"
+                              : "text-foreground hover:bg-foreground/10"
+                          }`}
+                        >
+                          {s.label}
+                        </button>
+                      </li>
+                    );
+                  })}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+
+            <button
+              type="button"
+              onClick={() => setMobileOpen((o) => !o)}
+              aria-expanded={mobileOpen}
+              aria-label={mobileOpen ? "Close section navigation" : "Open section navigation"}
+              className="relative flex items-center justify-center w-12 h-12 rounded-full glass-intense ring-1 ring-foreground/10 text-foreground shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+            >
+              <motion.span
+                key={mobileOpen ? "close" : "open"}
+                initial={{ rotate: -90, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                exit={{ rotate: 90, opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 flex items-center justify-center"
+              >
+                {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+              </motion.span>
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 };
