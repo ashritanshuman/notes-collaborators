@@ -378,7 +378,7 @@ const UploadNotes = () => {
               type="submit"
               className="w-full"
               size="lg"
-              disabled={uploading}
+              disabled={uploading || !file}
             >
               {uploading ? (
                 <>
