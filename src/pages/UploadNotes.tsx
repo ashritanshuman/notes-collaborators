@@ -126,6 +126,14 @@ const UploadNotes = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!file) {
+      toast({
+        title: "No file selected",
+        description: "Please choose or drop a file before uploading your notes.",
+        variant: "destructive",
+      });
+      return;
+    }
     setUploading(true);
     
     // Simulate upload
@@ -370,7 +378,7 @@ const UploadNotes = () => {
               type="submit"
               className="w-full"
               size="lg"
-              disabled={uploading}
+              disabled={uploading || !file}
             >
               {uploading ? (
                 <>
