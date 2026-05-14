@@ -289,7 +289,17 @@ const UploadNotes = () => {
             {/* File Upload */}
             <div className="space-y-2">
               <Label htmlFor="file">Upload File *</Label>
-              <div className="glass border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-smooth cursor-pointer">
+              <div
+                onDragOver={handleDragOver}
+                onDragEnter={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`glass border-2 border-dashed rounded-lg p-8 text-center transition-smooth cursor-pointer ${
+                  isDragging
+                    ? "border-primary bg-primary/5 scale-[1.01]"
+                    : "border-border hover:border-primary"
+                }`}
+              >
                 <input
                   type="file"
                   id="file"
@@ -301,7 +311,7 @@ const UploadNotes = () => {
                 <label htmlFor="file" className="cursor-pointer">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm font-medium mb-1">
-                    Click to upload or drag and drop
+                    {isDragging ? "Drop file here" : "Click to upload or drag and drop"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     PDF, PPT, DOCX, or Images (max 25MB)
