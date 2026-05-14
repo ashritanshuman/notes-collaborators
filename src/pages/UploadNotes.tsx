@@ -390,6 +390,24 @@ const UploadNotes = () => {
             </div>
 
             {/* Submit Button */}
+            <AnimatePresence>
+              {uploading && (
+                <motion.div
+                  initial={{ opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -4 }}
+                  className="space-y-2"
+                  aria-live="polite"
+                >
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Uploading{file ? ` "${file.name}"` : ""}…</span>
+                    <span>{Math.round(uploadProgress)}%</span>
+                  </div>
+                  <Progress value={uploadProgress} className="h-2" />
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             <Button
               type="submit"
               className="w-full"
