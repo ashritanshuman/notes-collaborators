@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, CheckCircle2 } from "lucide-react";
+import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIcon } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
@@ -21,6 +22,40 @@ const UploadNotes = () => {
   const { toast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
+  };
+
+  const getFileIcon = (f: File) => {
+    if (f.type.startsWith("image/")) return FileImage;
+    if (f.type === "application/pdf") return FileType;
+    return FileIcon;
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0] ?? null;
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setFile(f);
+    if (f && f.type.startsWith("image/")) {
+      setPreviewUrl(URL.createObjectURL(f));
+    }
+  };
+
+  const clearFile = () => {
+    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    setPreviewUrl(null);
+    setFile(null);
+    const input = document.getElementById("file") as HTMLInputElement | null;
+    if (input) input.value = "";
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -194,6 +229,7 @@ const UploadNotes = () => {
                   className="hidden"
                   accept=".pdf,.ppt,.pptx,.doc,.docx,.jpg,.jpeg,.png"
                   required
+                  onChange={handleFileChange}
                 />
                 <label htmlFor="file" className="cursor-pointer">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
@@ -205,6 +241,51 @@ const UploadNotes = () => {
                   </p>
                 </label>
               </div>
+
+              <AnimatePresence>
+                {file && (
+                  <motion.div
+                    key={file.name + file.size}
+                    initial={{ opacity: 0, y: 8, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.98 }}
+                    transition={{ duration: 0.2 }}
+                    className="glass-intense rounded-lg p-3 flex items-center gap-3 mt-3"
+                  >
+                    <div className="h-14 w-14 rounded-md overflow-hidden flex items-center justify-center bg-muted/30 border border-border shrink-0">
+                      {previewUrl ? (
+                        <img
+                          src={previewUrl}
+                          alt={file.name}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        (() => {
+                          const Icon = getFileIcon(file);
+                          return <Icon className="h-6 w-6 text-foreground" />;
+                        })()
+                      )}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{file.name}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {formatBytes(file.size)}
+                        {file.type ? ` · ${file.type}` : ""}
+                      </p>
+                    </div>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      onClick={clearFile}
+                      aria-label="Remove file"
+                      className="shrink-0"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Submit Button */}
