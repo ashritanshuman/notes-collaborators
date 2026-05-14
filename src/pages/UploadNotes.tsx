@@ -26,6 +26,7 @@ const UploadNotes = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -43,20 +44,75 @@ const UploadNotes = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
-    if (f && f.size > MAX_FILE_SIZE_BYTES) {
+    if (!acceptFile(f)) {
+      e.target.value = "";
+    }
+  };
+
+  const ACCEPTED_EXTENSIONS = [".pdf", ".ppt", ".pptx", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
+
+  const acceptFile = (f: File | null): boolean => {
+    if (!f) {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+      setFile(null);
+      return true;
+    }
+    const lower = f.name.toLowerCase();
+    const extOk = ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+    if (!extOk) {
+      toast({
+        title: "Unsupported file type",
+        description: `"${f.name}" is not a supported format. Allowed: PDF, PPT, DOCX, or images.`,
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (f.size > MAX_FILE_SIZE_BYTES) {
       toast({
         title: "File too large",
         description: `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
         variant: "destructive",
       });
-      e.target.value = "";
-      return;
+      return false;
     }
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(f);
-    if (f && f.type.startsWith("image/")) {
+    if (f.type.startsWith("image/")) {
       setPreviewUrl(URL.createObjectURL(f));
+    }
+    return true;
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDragging) setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragging(false);
+    const f = e.dataTransfer.files?.[0] ?? null;
+    if (acceptFile(f) && f) {
+      const input = document.getElementById("file") as HTMLInputElement | null;
+      if (input) {
+        try {
+          const dt = new DataTransfer();
+          dt.items.add(f);
+          input.files = dt.files;
+        } catch {
+          // Some browsers may not allow this; preview still works via state.
+        }
+      }
     }
   };
 
@@ -233,7 +289,17 @@ const UploadNotes = () => {
             {/* File Upload */}
             <div className="space-y-2">
               <Label htmlFor="file">Upload File *</Label>
-              <div className="glass border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary transition-smooth cursor-pointer">
+              <div
+                onDragOver={handleDragOver}
+                onDragEnter={handleDragOver}
+                onDragLeave={handleDragLeave}
+                onDrop={handleDrop}
+                className={`glass border-2 border-dashed rounded-lg p-8 text-center transition-smooth cursor-pointer ${
+                  isDragging
+                    ? "border-primary bg-primary/5 scale-[1.01]"
+                    : "border-border hover:border-primary"
+                }`}
+              >
                 <input
                   type="file"
                   id="file"
@@ -245,7 +311,7 @@ const UploadNotes = () => {
                 <label htmlFor="file" className="cursor-pointer">
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm font-medium mb-1">
-                    Click to upload or drag and drop
+                    {isDragging ? "Drop file here" : "Click to upload or drag and drop"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     PDF, PPT, DOCX, or Images (max 25MB)
