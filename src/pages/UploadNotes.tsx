@@ -20,6 +20,8 @@ import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
 
 const UploadNotes = () => {
   const { toast } = useToast();
+  const MAX_FILE_SIZE_MB = 25;
+  const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
   const [uploading, setUploading] = useState(false);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [file, setFile] = useState<File | null>(null);
@@ -41,6 +43,15 @@ const UploadNotes = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0] ?? null;
+    if (f && f.size > MAX_FILE_SIZE_BYTES) {
+      toast({
+        title: "File too large",
+        description: `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
+        variant: "destructive",
+      });
+      e.target.value = "";
+      return;
+    }
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(f);
