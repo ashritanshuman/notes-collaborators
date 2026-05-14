@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Progress } from "@/components/ui/progress";
 import { AnimatePresence, motion } from "framer-motion";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -23,6 +24,7 @@ const UploadNotes = () => {
   const MAX_FILE_SIZE_MB = 25;
   const MAX_FILE_SIZE_BYTES = MAX_FILE_SIZE_MB * 1024 * 1024;
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -135,15 +137,29 @@ const UploadNotes = () => {
       return;
     }
     setUploading(true);
-    
-    // Simulate upload
-    setTimeout(() => {
-      setUploading(false);
-      setUploadSuccess(true);
-      toast({
-        title: "Success!",
-        description: "Your notes have been uploaded successfully.",
+    setUploadProgress(0);
+
+    // Simulate upload progress
+    const interval = window.setInterval(() => {
+      setUploadProgress((prev) => {
+        if (prev >= 95) return prev;
+        const increment = Math.random() * 12 + 4;
+        return Math.min(prev + increment, 95);
       });
+    }, 200);
+
+    window.setTimeout(() => {
+      window.clearInterval(interval);
+      setUploadProgress(100);
+      window.setTimeout(() => {
+        setUploading(false);
+        setUploadSuccess(true);
+        setUploadProgress(0);
+        toast({
+          title: "Success!",
+          description: "Your notes have been uploaded successfully.",
+        });
+      }, 400);
     }, 2000);
   };
 
