@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIcon } from "lucide-react";
+import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIcon, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
@@ -29,6 +29,7 @@ const UploadNotes = () => {
   const [file, setFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [fileError, setFileError] = useState<string | null>(null);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -52,32 +53,55 @@ const UploadNotes = () => {
   };
 
   const ACCEPTED_EXTENSIONS = [".pdf", ".ppt", ".pptx", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
+  const ACCEPTED_MIME_TYPES = [
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/png",
+  ];
+
+  const getFileTypeError = (f: File): string | null => {
+    const lower = f.name.toLowerCase();
+    const extOk = ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+    const mimeOk = ACCEPTED_MIME_TYPES.includes(f.type);
+    if (!extOk && !mimeOk) {
+      return `"${f.name}" is not a supported format. Allowed: PDF, PPT, DOCX, or images.`;
+    }
+    return null;
+  };
 
   const acceptFile = (f: File | null): boolean => {
     if (!f) {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       setFile(null);
+      setFileError(null);
       return true;
     }
-    const lower = f.name.toLowerCase();
-    const extOk = ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
-    if (!extOk) {
+    const typeError = getFileTypeError(f);
+    if (typeError) {
+      setFileError(typeError);
       toast({
         title: "Unsupported file type",
-        description: `"${f.name}" is not a supported format. Allowed: PDF, PPT, DOCX, or images.`,
+        description: typeError,
         variant: "destructive",
       });
       return false;
     }
     if (f.size > MAX_FILE_SIZE_BYTES) {
+      const sizeMsg = `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`;
+      setFileError(sizeMsg);
       toast({
         title: "File too large",
-        description: `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
+        description: sizeMsg,
         variant: "destructive",
       });
       return false;
     }
+    setFileError(null);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(f);
@@ -132,6 +156,7 @@ const UploadNotes = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(null);
+    setFileError(null);
     const input = document.getElementById("file") as HTMLInputElement | null;
     if (input) input.value = "";
   };
@@ -425,6 +450,23 @@ const UploadNotes = () => {
                     >
                       <X className="h-4 w-4" />
                     </Button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <AnimatePresence>
+                {fileError && (
+                  <motion.div
+                    key="file-error"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-start gap-2 text-sm text-destructive mt-2"
+                    role="alert"
+                  >
+                    <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span>{fileError}</span>
                   </motion.div>
                 )}
               </AnimatePresence>
