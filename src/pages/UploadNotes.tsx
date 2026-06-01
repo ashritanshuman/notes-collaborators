@@ -14,7 +14,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIcon } from "lucide-react";
+import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIcon, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
