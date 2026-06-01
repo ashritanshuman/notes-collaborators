@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 import { AnimatePresence, motion } from "framer-motion";
 import { Header } from "@/components/Header";
@@ -87,21 +87,31 @@ const UploadNotes = () => {
     return true;
   };
 
+  const dragCounter = useRef(0);
+
+  const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dragCounter.current++;
+    if (dragCounter.current === 1) setIsDragging(true);
+  };
+
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    if (!isDragging) setIsDragging(true);
   };
 
   const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-    setIsDragging(false);
+    dragCounter.current--;
+    if (dragCounter.current === 0) setIsDragging(false);
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
+    dragCounter.current = 0;
     setIsDragging(false);
     const f = e.dataTransfer.files?.[0] ?? null;
     if (acceptFile(f) && f) {
@@ -314,11 +324,11 @@ const UploadNotes = () => {
             <div className="space-y-2">
               <Label htmlFor="file">Upload File *</Label>
               <div
+                onDragEnter={handleDragEnter}
                 onDragOver={handleDragOver}
-                onDragEnter={handleDragOver}
                 onDragLeave={handleDragLeave}
                 onDrop={handleDrop}
-                className={`glass border-2 border-dashed rounded-lg p-8 text-center transition-smooth cursor-pointer ${
+                className={`relative glass border-2 border-dashed rounded-lg p-8 text-center overflow-hidden transition-smooth cursor-pointer ${
                   isDragging
                     ? "border-primary bg-primary/5 scale-[1.01]"
                     : "border-border hover:border-primary"
@@ -332,15 +342,46 @@ const UploadNotes = () => {
                   required
                   onChange={handleFileChange}
                 />
-                <label htmlFor="file" className="cursor-pointer">
+                <label
+                  htmlFor="file"
+                  className={`cursor-pointer block transition-opacity duration-300 ease-out ${
+                    isDragging ? "opacity-0" : "opacity-100"
+                  }`}
+                >
                   <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
                   <p className="text-sm font-medium mb-1">
-                    {isDragging ? "Drop file here" : "Click to upload or drag and drop"}
+                    Click to upload or drag and drop
                   </p>
                   <p className="text-xs text-muted-foreground">
                     PDF, PPT, DOCX, or Images (max 25MB)
                   </p>
                 </label>
+
+                <AnimatePresence>
+                  {isDragging && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.25 }}
+                      className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm pointer-events-none"
+                    >
+                      <motion.div
+                        initial={{ scale: 0.8, y: 12 }}
+                        animate={{ scale: 1, y: 0 }}
+                        exit={{ scale: 0.8, y: 12 }}
+                        transition={{ duration: 0.3, ease: "easeOut" }}
+                        className="flex flex-col items-center"
+                      >
+                        <Upload className="h-10 w-10 text-primary mb-3" />
+                        <p className="text-base font-semibold">Drop to upload</p>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Release file here
+                        </p>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
 
               <AnimatePresence>
