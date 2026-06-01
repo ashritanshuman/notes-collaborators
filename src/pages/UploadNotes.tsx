@@ -453,6 +453,23 @@ const UploadNotes = () => {
                   </motion.div>
                 )}
               </AnimatePresence>
+
+              <AnimatePresence>
+                {fileError && (
+                  <motion.div
+                    key="file-error"
+                    initial={{ opacity: 0, y: 4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.2 }}
+                    className="flex items-start gap-2 text-sm text-destructive mt-2"
+                    role="alert"
+                  >
+                    <AlertCircle className="h-4 w-4 mt-0.5 shrink-0" />
+                    <span>{fileError}</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Submit Button */}
