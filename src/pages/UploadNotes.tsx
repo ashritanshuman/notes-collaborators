@@ -53,32 +53,55 @@ const UploadNotes = () => {
   };
 
   const ACCEPTED_EXTENSIONS = [".pdf", ".ppt", ".pptx", ".doc", ".docx", ".jpg", ".jpeg", ".png"];
+  const ACCEPTED_MIME_TYPES = [
+    "application/pdf",
+    "application/vnd.ms-powerpoint",
+    "application/vnd.openxmlformats-officedocument.presentationml.presentation",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "image/jpeg",
+    "image/png",
+  ];
+
+  const getFileTypeError = (f: File): string | null => {
+    const lower = f.name.toLowerCase();
+    const extOk = ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
+    const mimeOk = ACCEPTED_MIME_TYPES.includes(f.type);
+    if (!extOk && !mimeOk) {
+      return `"${f.name}" is not a supported format. Allowed: PDF, PPT, DOCX, or images.`;
+    }
+    return null;
+  };
 
   const acceptFile = (f: File | null): boolean => {
     if (!f) {
       if (previewUrl) URL.revokeObjectURL(previewUrl);
       setPreviewUrl(null);
       setFile(null);
+      setFileError(null);
       return true;
     }
-    const lower = f.name.toLowerCase();
-    const extOk = ACCEPTED_EXTENSIONS.some((ext) => lower.endsWith(ext));
-    if (!extOk) {
+    const typeError = getFileTypeError(f);
+    if (typeError) {
+      setFileError(typeError);
       toast({
         title: "Unsupported file type",
-        description: `"${f.name}" is not a supported format. Allowed: PDF, PPT, DOCX, or images.`,
+        description: typeError,
         variant: "destructive",
       });
       return false;
     }
     if (f.size > MAX_FILE_SIZE_BYTES) {
+      const sizeMsg = `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`;
+      setFileError(sizeMsg);
       toast({
         title: "File too large",
-        description: `"${f.name}" is ${formatBytes(f.size)}. Maximum allowed size is ${MAX_FILE_SIZE_MB}MB.`,
+        description: sizeMsg,
         variant: "destructive",
       });
       return false;
     }
+    setFileError(null);
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(f);
