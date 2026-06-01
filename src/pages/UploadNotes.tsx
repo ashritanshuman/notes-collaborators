@@ -156,6 +156,7 @@ const UploadNotes = () => {
     if (previewUrl) URL.revokeObjectURL(previewUrl);
     setPreviewUrl(null);
     setFile(null);
+    setFileError(null);
     const input = document.getElementById("file") as HTMLInputElement | null;
     if (input) input.value = "";
   };
