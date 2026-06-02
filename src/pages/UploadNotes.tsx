@@ -30,6 +30,7 @@ const UploadNotes = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [rejectShake, setRejectShake] = useState(false);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -117,7 +118,10 @@ const UploadNotes = () => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current++;
-    if (dragCounter.current === 1) setIsDragging(true);
+    if (dragCounter.current === 1) {
+      setIsDragging(true);
+      setRejectShake(false);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
@@ -136,9 +140,11 @@ const UploadNotes = () => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current = 0;
-    setIsDragging(false);
     const f = e.dataTransfer.files?.[0] ?? null;
-    if (acceptFile(f) && f) {
+    const accepted = acceptFile(f);
+    if (accepted && f) {
+      setIsDragging(false);
+      setRejectShake(false);
       const input = document.getElementById("file") as HTMLInputElement | null;
       if (input) {
         try {
@@ -149,6 +155,12 @@ const UploadNotes = () => {
           // Some browsers may not allow this; preview still works via state.
         }
       }
+    } else {
+      setRejectShake(true);
+      window.setTimeout(() => {
+        setRejectShake(false);
+        setIsDragging(false);
+      }, 700);
     }
   };
 
@@ -389,20 +401,32 @@ const UploadNotes = () => {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm pointer-events-none"
+                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-sm pointer-events-none transition-colors duration-300 ${rejectShake ? "bg-destructive/10" : "bg-background/60"}`}
                     >
                       <motion.div
                         initial={{ scale: 0.8, y: 12 }}
-                        animate={{ scale: 1, y: 0 }}
+                        animate={rejectShake ? { x: [0, -10, 10, -8, 8, -5, 5, 0], scale: 1, y: 0 } : { scale: 1, y: 0 }}
                         exit={{ scale: 0.8, y: 12 }}
                         transition={{ duration: 0.3, ease: "easeOut" }}
                         className="flex flex-col items-center"
                       >
-                        <Upload className="h-10 w-10 text-primary mb-3" />
-                        <p className="text-base font-semibold">Drop to upload</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Unsupported file types will be rejected and the upload will not start
-                        </p>
+                        {rejectShake ? (
+                          <>
+                            <X className="h-10 w-10 text-destructive mb-3" />
+                            <p className="text-base font-semibold text-destructive">File rejected</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Unsupported file type or too large
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-10 w-10 text-primary mb-3" />
+                            <p className="text-base font-semibold">Drop to upload</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Unsupported file types will be rejected and the upload will not start
+                            </p>
+                          </>
+                        )}
                       </motion.div>
                     </motion.div>
                   )}
