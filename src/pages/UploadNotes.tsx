@@ -401,7 +401,7 @@ const UploadNotes = () => {
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.25 }}
-                      className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-background/60 backdrop-blur-sm pointer-events-none"
+                      className={`absolute inset-0 z-10 flex flex-col items-center justify-center backdrop-blur-sm pointer-events-none transition-colors duration-300 ${rejectShake ? "bg-destructive/10" : "bg-background/60"}`}
                     >
                       <motion.div
                         initial={{ scale: 0.8, y: 12 }}
