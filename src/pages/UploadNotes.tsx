@@ -401,7 +401,7 @@ const UploadNotes = () => {
                         <Upload className="h-10 w-10 text-primary mb-3" />
                         <p className="text-base font-semibold">Drop to upload</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Release file here
+                          Unsupported file types will be rejected and the upload will not start
                         </p>
                       </motion.div>
                     </motion.div>
