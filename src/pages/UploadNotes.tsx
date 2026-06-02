@@ -30,6 +30,7 @@ const UploadNotes = () => {
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [rejectShake, setRejectShake] = useState(false);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
