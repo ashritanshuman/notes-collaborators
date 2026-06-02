@@ -140,9 +140,11 @@ const UploadNotes = () => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current = 0;
-    setIsDragging(false);
     const f = e.dataTransfer.files?.[0] ?? null;
-    if (acceptFile(f) && f) {
+    const accepted = acceptFile(f);
+    if (accepted && f) {
+      setIsDragging(false);
+      setRejectShake(false);
       const input = document.getElementById("file") as HTMLInputElement | null;
       if (input) {
         try {
@@ -153,6 +155,12 @@ const UploadNotes = () => {
           // Some browsers may not allow this; preview still works via state.
         }
       }
+    } else {
+      setRejectShake(true);
+      window.setTimeout(() => {
+        setRejectShake(false);
+        setIsDragging(false);
+      }, 700);
     }
   };
 
