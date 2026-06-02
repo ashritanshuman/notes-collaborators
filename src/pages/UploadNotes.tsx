@@ -405,16 +405,28 @@ const UploadNotes = () => {
                     >
                       <motion.div
                         initial={{ scale: 0.8, y: 12 }}
-                        animate={{ scale: 1, y: 0 }}
+                        animate={rejectShake ? { x: [0, -10, 10, -8, 8, -5, 5, 0], scale: 1, y: 0 } : { scale: 1, y: 0 }}
                         exit={{ scale: 0.8, y: 12 }}
                         transition={{ duration: 0.3, ease: "easeOut" }}
                         className="flex flex-col items-center"
                       >
-                        <Upload className="h-10 w-10 text-primary mb-3" />
-                        <p className="text-base font-semibold">Drop to upload</p>
-                        <p className="text-xs text-muted-foreground mt-1">
-                          Unsupported file types will be rejected and the upload will not start
-                        </p>
+                        {rejectShake ? (
+                          <>
+                            <X className="h-10 w-10 text-destructive mb-3" />
+                            <p className="text-base font-semibold text-destructive">File rejected</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Unsupported file type or too large
+                            </p>
+                          </>
+                        ) : (
+                          <>
+                            <Upload className="h-10 w-10 text-primary mb-3" />
+                            <p className="text-base font-semibold">Drop to upload</p>
+                            <p className="text-xs text-muted-foreground mt-1">
+                              Unsupported file types will be rejected and the upload will not start
+                            </p>
+                          </>
+                        )}
                       </motion.div>
                     </motion.div>
                   )}
