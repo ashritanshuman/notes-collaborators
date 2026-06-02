@@ -118,7 +118,10 @@ const UploadNotes = () => {
     e.preventDefault();
     e.stopPropagation();
     dragCounter.current++;
-    if (dragCounter.current === 1) setIsDragging(true);
+    if (dragCounter.current === 1) {
+      setIsDragging(true);
+      setRejectShake(false);
+    }
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
