@@ -18,6 +18,16 @@ import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIco
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const UploadNotes = () => {
   const { toast } = useToast();
@@ -31,6 +41,7 @@ const UploadNotes = () => {
   const [isDragging, setIsDragging] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
   const [rejectShake, setRejectShake] = useState(false);
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
 
   const formatBytes = (bytes: number) => {
     if (bytes === 0) return "0 B";
@@ -275,6 +286,11 @@ const UploadNotes = () => {
   };
 
   const handleCancel = () => {
+    setShowCancelDialog(true);
+  };
+
+  const confirmCancel = () => {
+    setShowCancelDialog(false);
     if (xhrRef.current) {
       xhrRef.current.abort();
       xhrRef.current = null;
@@ -627,6 +643,28 @@ const UploadNotes = () => {
       </PageTransition>
 
       <Footer />
+
+      <AlertDialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Cancel upload?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to stop the upload? Your progress will be lost and you will have to start over.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setShowCancelDialog(false)}>
+              Keep uploading
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmCancel}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Cancel upload
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
