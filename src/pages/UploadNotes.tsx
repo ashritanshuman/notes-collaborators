@@ -264,12 +264,23 @@ const UploadNotes = () => {
       }, 100);
     };
 
+    xhrRef.current = xhr;
+
     try {
       xhr.open("POST", "/api/upload-notes");
       xhr.send(formData);
     } catch {
       simulateProgress();
     }
+  };
+
+  const handleCancel = () => {
+    if (xhrRef.current) {
+      xhrRef.current.abort();
+      xhrRef.current = null;
+    }
+    setUploading(false);
+    setUploadProgress(0);
   };
 
   const branches = ["CSE", "ECE", "Mechanical", "Civil", "EEE", "IT"];
