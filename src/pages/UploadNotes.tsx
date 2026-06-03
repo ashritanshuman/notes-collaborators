@@ -584,6 +584,16 @@ const UploadNotes = () => {
                     <span>{Math.round(uploadProgress)}%</span>
                   </div>
                   <Progress value={uploadProgress} className="h-2" />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCancel}
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Cancel upload
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>
