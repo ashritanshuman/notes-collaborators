@@ -18,6 +18,16 @@ import { Upload, FileText, CheckCircle2, X, FileImage, FileType, File as FileIco
 import { useToast } from "@/hooks/use-toast";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogAction,
+  AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 
 const UploadNotes = () => {
   const { toast } = useToast();
