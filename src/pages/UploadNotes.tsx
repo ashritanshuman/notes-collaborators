@@ -113,6 +113,7 @@ const UploadNotes = () => {
   };
 
   const dragCounter = useRef(0);
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
