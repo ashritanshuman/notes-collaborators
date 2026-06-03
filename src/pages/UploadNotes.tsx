@@ -113,6 +113,7 @@ const UploadNotes = () => {
   };
 
   const dragCounter = useRef(0);
+  const xhrRef = useRef<XMLHttpRequest | null>(null);
 
   const handleDragEnter = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -263,12 +264,23 @@ const UploadNotes = () => {
       }, 100);
     };
 
+    xhrRef.current = xhr;
+
     try {
       xhr.open("POST", "/api/upload-notes");
       xhr.send(formData);
     } catch {
       simulateProgress();
     }
+  };
+
+  const handleCancel = () => {
+    if (xhrRef.current) {
+      xhrRef.current.abort();
+      xhrRef.current = null;
+    }
+    setUploading(false);
+    setUploadProgress(0);
   };
 
   const branches = ["CSE", "ECE", "Mechanical", "Civil", "EEE", "IT"];
@@ -572,6 +584,16 @@ const UploadNotes = () => {
                     <span>{Math.round(uploadProgress)}%</span>
                   </div>
                   <Progress value={uploadProgress} className="h-2" />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleCancel}
+                    className="w-full text-destructive hover:text-destructive hover:bg-destructive/10"
+                  >
+                    <X className="h-4 w-4 mr-1" />
+                    Cancel upload
+                  </Button>
                 </motion.div>
               )}
             </AnimatePresence>
