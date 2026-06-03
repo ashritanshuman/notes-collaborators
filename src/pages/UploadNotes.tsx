@@ -286,6 +286,11 @@ const UploadNotes = () => {
   };
 
   const handleCancel = () => {
+    setShowCancelDialog(true);
+  };
+
+  const confirmCancel = () => {
+    setShowCancelDialog(false);
     if (xhrRef.current) {
       xhrRef.current.abort();
       xhrRef.current = null;
