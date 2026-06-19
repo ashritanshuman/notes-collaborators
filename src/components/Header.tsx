@@ -1,12 +1,23 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Moon, Sun, Menu, X } from "lucide-react";
+import { BookOpen, Moon, Sun, Menu, X, LogOut, Shield } from "lucide-react";
 import { useState } from "react";
 import { AnimatedSearchBar } from "@/components/AnimatedSearchBar";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
   const [darkMode, setDarkMode] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { user, isAdmin, signOut } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+
+  const handleSignOut = async () => {
+    await signOut();
+    toast({ title: "Signed out" });
+    navigate("/");
+  };
 
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
@@ -58,12 +69,25 @@ export const Header = () => {
             >
               {darkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
             </Button>
-            <Link to="/login">
-              <Button variant="ghost" className="hover-lift">Login</Button>
-            </Link>
-            <Link to="/register">
-              <Button className="gradient-primary hover-glow">Get Started</Button>
-            </Link>
+            {isAdmin && (
+              <Link to="/admin">
+                <Button variant="ghost" className="hover-lift gap-2"><Shield className="h-4 w-4" />Admin</Button>
+              </Link>
+            )}
+            {user ? (
+              <Button variant="ghost" className="hover-lift gap-2" onClick={handleSignOut}>
+                <LogOut className="h-4 w-4" />Sign out
+              </Button>
+            ) : (
+              <>
+                <Link to="/login">
+                  <Button variant="ghost" className="hover-lift">Login</Button>
+                </Link>
+                <Link to="/register">
+                  <Button className="gradient-primary hover-glow">Get Started</Button>
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -118,12 +142,20 @@ export const Header = () => {
               Dashboard
             </Link>
             <div className="flex gap-2 pt-2">
-              <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                <Button variant="outline" className="w-full">Login</Button>
-              </Link>
-              <Link to="/register" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
-                <Button className="w-full gradient-primary">Get Started</Button>
-              </Link>
+              {user ? (
+                <Button variant="outline" className="w-full" onClick={() => { setMobileMenuOpen(false); handleSignOut(); }}>
+                  Sign out
+                </Button>
+              ) : (
+                <>
+                  <Link to="/login" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                    <Button variant="outline" className="w-full">Login</Button>
+                  </Link>
+                  <Link to="/register" className="flex-1" onClick={() => setMobileMenuOpen(false)}>
+                    <Button className="w-full gradient-primary">Get Started</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </nav>
         )}
