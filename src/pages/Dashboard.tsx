@@ -1,171 +1,116 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { NoteCard } from "@/components/NoteCard";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Upload, Bookmark, Award, Settings } from "lucide-react";
+import { User, Upload } from "lucide-react";
 import { PageTransition } from "@/components/motion/PageTransition";
 import { RevealOnScroll } from "@/components/motion/RevealOnScroll";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useNavigate, Link } from "react-router-dom";
+import { formatDistanceToNow } from "date-fns";
+
+type Profile = { display_name: string | null; branch: string | null; year: string | null };
+type NoteRow = { id: string; title: string; subject: string; branch: string; semester: string; file_type: string; downloads: number; created_at: string };
 
 const Dashboard = () => {
-  const [activeTab, setActiveTab] = useState("uploads");
+  const { user, loading: authLoading } = useAuth();
+  const navigate = useNavigate();
+  const [profile, setProfile] = useState<Profile | null>(null);
+  const [myUploads, setMyUploads] = useState<NoteRow[]>([]);
 
-  // Mock user data
-  const user = {
-    name: "Rahul Sharma",
-    email: "rahul.sharma@student.edu",
-    branch: "CSE",
-    year: "3rd Year",
-    avatar: "RS",
-    totalUploads: 12,
-    totalLikes: 458,
-    totalDownloads: 1234,
-    badge: "Gold Contributor",
-  };
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/login");
+  }, [authLoading, user, navigate]);
 
-  // Mock uploaded notes
-  const myUploads = [
-    {
-      id: "1",
-      title: "Data Structures and Algorithms Complete Notes",
-      subject: "Data Structures",
-      branch: "CSE",
-      semester: "3",
-      uploadedBy: "You",
-      uploadDate: "2 days ago",
-      likes: 234,
-      downloads: 567,
-      fileType: "PDF",
-    },
-    {
-      id: "2",
-      title: "Operating Systems Comprehensive Guide",
-      subject: "Operating Systems",
-      branch: "CSE",
-      semester: "5",
-      uploadedBy: "You",
-      uploadDate: "1 week ago",
-      likes: 189,
-      downloads: 423,
-      fileType: "PDF",
-    },
-  ];
+  useEffect(() => {
+    if (!user) return;
+    (async () => {
+      const [{ data: p }, { data: n }] = await Promise.all([
+        supabase.from("profiles").select("display_name, branch, year").eq("id", user.id).maybeSingle(),
+        supabase.from("notes").select("id, title, subject, branch, semester, file_type, downloads, created_at").eq("user_id", user.id).order("created_at", { ascending: false }),
+      ]);
+      setProfile(p as Profile);
+      setMyUploads((n as NoteRow[]) ?? []);
+    })();
+  }, [user]);
 
-  // Mock saved notes
-  const savedNotes = [
-    {
-      id: "3",
-      title: "Machine Learning Complete Notes",
-      subject: "Machine Learning",
-      branch: "CSE",
-      semester: "7",
-      uploadedBy: "Priya Patel",
-      uploadDate: "3 days ago",
-      likes: 156,
-      downloads: 389,
-      fileType: "PDF",
-    },
-  ];
+  if (authLoading || !user) {
+    return (
+      <div className="min-h-screen flex flex-col gradient-subtle">
+        <Header />
+        <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading…</div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const initials = (profile?.display_name || user.email || "?").charAt(0).toUpperCase();
+  const totalDownloads = myUploads.reduce((sum, n) => sum + n.downloads, 0);
 
   return (
     <div className="min-h-screen flex flex-col gradient-subtle">
       <Header />
-
       <PageTransition>
-      <div className="flex-1 container mx-auto px-4 py-8">
-        {/* Profile Header */}
-        <RevealOnScroll>
-        <div className="glass-intense rounded-2xl p-8 mb-8 hover-lift">
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-            {/* Avatar */}
-            <div className="w-24 h-24 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-3xl font-bold shadow-lg">
-              {user.avatar}
-            </div>
-
-            {/* User Info */}
-            <div className="flex-1 text-center md:text-left">
-              <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">{user.name}</h1>
-              <p className="text-muted-foreground mb-4">{user.email}</p>
-              <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm">
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full glass">
-                  <User className="h-4 w-4" />
-                  <span>{user.branch} • {user.year}</span>
+        <div className="flex-1 container mx-auto px-4 py-8">
+          <RevealOnScroll>
+            <div className="glass-intense rounded-2xl p-8 mb-8 hover-lift">
+              <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                <div className="w-24 h-24 rounded-full gradient-primary flex items-center justify-center text-primary-foreground text-3xl font-bold shadow-lg">
+                  {initials}
                 </div>
-                <div className="flex items-center gap-2 px-3 py-1 rounded-full glass text-foreground">
-                  <Award className="h-4 w-4" />
-                  <span>{user.badge}</span>
+                <div className="flex-1 text-center md:text-left">
+                  <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">{profile?.display_name || "Student"}</h1>
+                  <p className="text-muted-foreground mb-4">{user.email}</p>
+                  {(profile?.branch || profile?.year) && (
+                    <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm">
+                      <div className="flex items-center gap-2 px-3 py-1 rounded-full glass">
+                        <User className="h-4 w-4" />
+                        <span>{[profile?.branch, profile?.year].filter(Boolean).join(" • ")}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+                <Link to="/upload">
+                  <Button className="gradient-primary"><Upload className="h-4 w-4 mr-2" />Upload Notes</Button>
+                </Link>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-border/50">
+                <div className="text-center">
+                  <p className="text-3xl md:text-4xl font-bold gradient-text">{myUploads.length}</p>
+                  <p className="text-sm text-muted-foreground">Uploads</p>
+                </div>
+                <div className="text-center">
+                  <p className="text-3xl md:text-4xl font-bold gradient-text">{totalDownloads}</p>
+                  <p className="text-sm text-muted-foreground">Downloads</p>
                 </div>
               </div>
             </div>
+          </RevealOnScroll>
 
-            {/* Actions */}
-            <Button variant="glass">
-              <Settings className="h-4 w-4 mr-2" />
-              Edit Profile
-            </Button>
-          </div>
-
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-4 mt-8 pt-8 border-t border-border/50">
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold gradient-text">{user.totalUploads}</p>
-              <p className="text-sm text-muted-foreground">Uploads</p>
+          <h2 className="text-2xl font-bold text-foreground mb-4">My Uploads ({myUploads.length})</h2>
+          {myUploads.length === 0 ? (
+            <div className="glass-card rounded-xl p-12 text-center">
+              <p className="text-muted-foreground mb-4">You haven't uploaded any notes yet.</p>
+              <Link to="/upload"><Button>Upload your first note</Button></Link>
             </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold gradient-text">{user.totalLikes}</p>
-              <p className="text-sm text-muted-foreground">Likes Received</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {myUploads.map((n, i) => (
+                <RevealOnScroll key={n.id} delay={i * 0.05}>
+                  <NoteCard
+                    id={n.id} title={n.title} subject={n.subject} branch={n.branch} semester={n.semester}
+                    uploadedBy="You" uploadDate={formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                    likes={0} downloads={n.downloads} fileType={n.file_type}
+                  />
+                </RevealOnScroll>
+              ))}
             </div>
-            <div className="text-center">
-              <p className="text-3xl md:text-4xl font-bold gradient-text">{user.totalDownloads}</p>
-              <p className="text-sm text-muted-foreground">Downloads</p>
-            </div>
-          </div>
+          )}
         </div>
-        </RevealOnScroll>
-
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="glass mb-8">
-            <TabsTrigger value="uploads" className="gap-2">
-              <Upload className="h-4 w-4" />
-              My Uploads
-            </TabsTrigger>
-            <TabsTrigger value="saved" className="gap-2">
-              <Bookmark className="h-4 w-4" />
-              Saved Notes
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="uploads" className="space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-foreground">My Uploads ({myUploads.length})</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {myUploads.map((note, i) => (
-                <RevealOnScroll key={note.id} delay={i * 0.05}>
-                  <NoteCard {...note} />
-                </RevealOnScroll>
-              ))}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="saved" className="space-y-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-foreground">Saved Notes ({savedNotes.length})</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {savedNotes.map((note, i) => (
-                <RevealOnScroll key={note.id} delay={i * 0.05}>
-                  <NoteCard {...note} />
-                </RevealOnScroll>
-              ))}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </div>
       </PageTransition>
-
       <Footer />
     </div>
   );

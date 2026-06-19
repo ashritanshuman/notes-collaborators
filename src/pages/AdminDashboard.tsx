@@ -1,172 +1,134 @@
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
-import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import {
-  Users,
-  FileText,
-  Download,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-} from "lucide-react";
+import { Users, FileText, Download, XCircle, ShieldAlert } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { formatDistanceToNow } from "date-fns";
+
+type NoteRow = {
+  id: string; title: string; subject: string; branch: string; semester: string;
+  file_type: string; downloads: number; created_at: string; user_id: string; file_path: string;
+  profiles: { display_name: string | null } | null;
+};
 
 const AdminDashboard = () => {
-  // Mock stats
+  const { user, isAdmin, loading } = useAuth();
+  const navigate = useNavigate();
+  const { toast } = useToast();
+  const [notes, setNotes] = useState<NoteRow[]>([]);
+  const [userCount, setUserCount] = useState(0);
+  const [totalDownloads, setTotalDownloads] = useState(0);
+
+  useEffect(() => {
+    if (loading) return;
+    if (!user) navigate("/login");
+  }, [loading, user, navigate]);
+
+  const fetchAll = async () => {
+    const [{ data: n }, { count }] = await Promise.all([
+      supabase.from("notes").select("*, profiles(display_name)").order("created_at", { ascending: false }).limit(100),
+      supabase.from("profiles").select("*", { count: "exact", head: true }),
+    ]);
+    const list = (n as unknown as NoteRow[]) ?? [];
+    setNotes(list);
+    setUserCount(count ?? 0);
+    setTotalDownloads(list.reduce((s, x) => s + x.downloads, 0));
+  };
+
+  useEffect(() => { if (isAdmin) fetchAll(); }, [isAdmin]);
+
+  const handleDelete = async (note: NoteRow) => {
+    if (!confirm(`Delete "${note.title}"? This cannot be undone.`)) return;
+    const { error: dbErr } = await supabase.from("notes").delete().eq("id", note.id);
+    if (dbErr) { toast({ title: "Delete failed", description: dbErr.message, variant: "destructive" }); return; }
+    await supabase.storage.from("notes").remove([note.file_path]);
+    toast({ title: "Note deleted" });
+    fetchAll();
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col gradient-subtle">
+        <Header />
+        <div className="flex-1 flex items-center justify-center text-muted-foreground">Loading…</div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex flex-col gradient-subtle">
+        <Header />
+        <div className="flex-1 flex items-center justify-center container mx-auto px-4 py-20">
+          <div className="glass-intense rounded-2xl p-12 text-center max-w-xl">
+            <ShieldAlert className="h-16 w-16 text-destructive mx-auto mb-6" />
+            <h2 className="text-3xl font-bold mb-3">Admin access required</h2>
+            <p className="text-muted-foreground">Your account doesn't have admin privileges.</p>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   const stats = [
-    { label: "Total Notes", value: "1,234", icon: FileText, change: "+12%" },
-    { label: "Total Users", value: "5,678", icon: Users, change: "+8%" },
-    { label: "Total Downloads", value: "45.6K", icon: Download, change: "+23%" },
-    { label: "Active Today", value: "892", icon: TrendingUp, change: "+5%" },
-  ];
-
-  // Mock reported notes
-  const reportedNotes = [
-    {
-      id: "1",
-      title: "Incorrect DSA Notes",
-      reportedBy: "Student A",
-      reason: "Wrong content",
-      date: "2 hours ago",
-    },
-    {
-      id: "2",
-      title: "Spam Upload",
-      reportedBy: "Student B",
-      reason: "Spam",
-      date: "5 hours ago",
-    },
-  ];
-
-  // Mock branch stats
-  const branchStats = [
-    { branch: "CSE", notes: 456, users: 1234 },
-    { branch: "ECE", notes: 234, users: 789 },
-    { branch: "Mechanical", notes: 189, users: 567 },
-    { branch: "Civil", notes: 145, users: 456 },
+    { label: "Total Notes", value: notes.length, icon: FileText },
+    { label: "Total Users", value: userCount, icon: Users },
+    { label: "Total Downloads", value: totalDownloads, icon: Download },
   ];
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col gradient-subtle">
       <Header />
-
       <div className="flex-1 container mx-auto px-4 py-8">
-        {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
-          <p className="text-muted-foreground">
-            Manage notes, users, and platform analytics
-          </p>
+          <p className="text-muted-foreground">Manage notes and platform analytics</p>
         </div>
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <div key={index} className="glass-card p-6 rounded-xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          {stats.map((s) => (
+            <div key={s.label} className="glass-card p-6 rounded-xl">
               <div className="flex items-center justify-between mb-4">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <stat.icon className="h-5 w-5 text-primary" />
-                </div>
-                <Badge variant="secondary" className="text-xs">
-                  {stat.change}
-                </Badge>
+                <div className="p-2 rounded-lg bg-primary/10"><s.icon className="h-5 w-5 text-primary" /></div>
               </div>
-              <p className="text-3xl font-bold mb-1">{stat.value}</p>
-              <p className="text-sm text-muted-foreground">{stat.label}</p>
+              <p className="text-3xl font-bold mb-1">{s.value}</p>
+              <p className="text-sm text-muted-foreground">{s.label}</p>
             </div>
           ))}
         </div>
 
-        {/* Two Column Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Reported Notes */}
-          <div className="glass-card p-6 rounded-xl">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5 text-destructive" />
-                <h2 className="text-xl font-bold text-foreground">Reported Notes</h2>
-              </div>
-              <Badge variant="destructive">{reportedNotes.length}</Badge>
-            </div>
-
-            <div className="space-y-4">
-              {reportedNotes.map((report) => (
-                <div
-                  key={report.id}
-                  className="p-4 rounded-lg bg-muted/50 space-y-3"
-                >
-                  <div className="flex items-start justify-between">
-                    <div>
-                      <h3 className="font-semibold text-foreground mb-1">{report.title}</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Reported by {report.reportedBy} • {report.date}
-                      </p>
-                    </div>
-                    <Badge variant="outline">{report.reason}</Badge>
+        <div className="glass-card p-6 rounded-xl">
+          <h2 className="text-xl font-bold mb-6">Recent Uploads</h2>
+          {notes.length === 0 ? (
+            <p className="text-muted-foreground">No uploads yet.</p>
+          ) : (
+            <div className="space-y-3">
+              {notes.map((n) => (
+                <div key={n.id} className="flex items-center justify-between gap-4 p-4 rounded-lg bg-muted/40">
+                  <div className="min-w-0 flex-1">
+                    <p className="font-semibold truncate">{n.title}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {n.profiles?.display_name || "Anonymous"} • {n.branch} • Sem {n.semester} • {formatDistanceToNow(new Date(n.created_at), { addSuffix: true })}
+                    </p>
                   </div>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">
-                      <CheckCircle className="h-4 w-4 mr-1" />
-                      Approve
-                    </Button>
-                    <Button size="sm" variant="destructive">
-                      <XCircle className="h-4 w-4 mr-1" />
-                      Delete
-                    </Button>
-                  </div>
+                  <Badge variant="outline">{n.file_type}</Badge>
+                  <Badge variant="secondary">{n.downloads} dl</Badge>
+                  <Button size="sm" variant="destructive" onClick={() => handleDelete(n)}>
+                    <XCircle className="h-4 w-4 mr-1" />Delete
+                  </Button>
                 </div>
               ))}
             </div>
-          </div>
-
-          {/* Branch Statistics */}
-          <div className="glass-card p-6 rounded-xl">
-            <h2 className="text-xl font-bold text-foreground mb-6">Branch Statistics</h2>
-            <div className="space-y-4">
-              {branchStats.map((stat, index) => (
-                <div key={index} className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="font-medium text-foreground">{stat.branch}</span>
-                    <span className="text-muted-foreground">
-                      {stat.notes} notes • {stat.users} users
-                    </span>
-                  </div>
-                  <div className="h-2 bg-muted rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-primary to-accent"
-                      style={{
-                        width: `${(stat.notes / 500) * 100}%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* Management Section */}
-        <div className="glass-card p-6 rounded-xl mt-8">
-          <h2 className="text-xl font-bold text-foreground mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button variant="outline" className="justify-start">
-              <Users className="h-4 w-4 mr-2" />
-              Manage Users
-            </Button>
-            <Button variant="outline" className="justify-start">
-              <FileText className="h-4 w-4 mr-2" />
-              Manage Branches
-            </Button>
-            <Button variant="outline" className="justify-start">
-              <TrendingUp className="h-4 w-4 mr-2" />
-              View Analytics
-            </Button>
-          </div>
+          )}
         </div>
       </div>
-
       <Footer />
     </div>
   );
