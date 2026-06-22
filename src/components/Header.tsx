@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
 
 export const Header = () => {
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(() => document.documentElement.classList.contains("dark"));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, isAdmin, signOut } = useAuth();
   const navigate = useNavigate();

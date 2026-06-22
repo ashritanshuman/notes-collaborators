@@ -95,9 +95,9 @@ All colors MUST be HSL.
     --glass-border: 0 0% 100%;
     
     /* Dark mode gradients */
-    --gradient-start: 0 0% 0%;
+    --gradient-start: 0 0% 85%;
     --gradient-mid: 0 0% 15%;
-    --gradient-end: 0 0% 30%;
+    --gradient-end: 0 0% 100%;
     
     /* Dark mode glow */
     --glow-color: 0 0% 100%;
@@ -170,7 +170,7 @@ All colors MUST be HSL.
   }
   
   .gradient-text {
-    background: linear-gradient(135deg, hsl(var(--gradient-end)), hsl(var(--foreground)));
+    background: linear-gradient(135deg, hsl(var(--gradient-mid)), hsl(var(--foreground)));
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
