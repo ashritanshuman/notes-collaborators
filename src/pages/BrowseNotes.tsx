@@ -65,7 +65,11 @@ const BrowseNotes = () => {
       <PageTransition>
         <div className="flex-1 container mx-auto px-4 py-8">
           <RevealOnScroll className="mb-8">
-            <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-3 tracking-tight">Browse Notes</h1>
+            <span className="eyebrow mb-4">The Library</span>
+            <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground mt-4 mb-3 tracking-[-0.03em] leading-[1]">
+              Browse <span className="gradient-text italic font-light">notes</span>
+            </h1>
+            <div className="rule-gold w-32 mb-4" />
             <p className="text-muted-foreground text-lg">Search and filter through study materials shared by students</p>
           </RevealOnScroll>
 

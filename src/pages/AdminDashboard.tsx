@@ -88,7 +88,11 @@ const AdminDashboard = () => {
       <Header />
       <div className="flex-1 container mx-auto px-4 py-8">
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Admin Dashboard</h1>
+          <span className="eyebrow mb-4">Control Room</span>
+          <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground mt-4 mb-3 tracking-[-0.03em] leading-[1]">
+            Admin <span className="gradient-text italic font-light">dashboard</span>
+          </h1>
+          <div className="rule-gold w-32 mb-4" />
           <p className="text-muted-foreground">Manage notes and platform analytics</p>
         </div>
 
