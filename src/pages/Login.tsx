@@ -59,7 +59,11 @@ const Login = () => {
 
           <div className="glass-intense rounded-2xl p-8 animate-fade-in hover-lift">
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">Welcome Back</h1>
+              <span className="eyebrow mb-4 justify-center">Sign In</span>
+              <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground mt-3 mb-2 tracking-[-0.03em] leading-[1]">
+                Welcome <span className="gradient-text italic font-light">back</span>
+              </h1>
+              <div className="rule-gold w-24 mx-auto my-3" />
               <p className="text-muted-foreground">Login to access your account</p>
             </div>
 

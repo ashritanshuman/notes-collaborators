@@ -311,7 +311,11 @@ const UploadNotes = () => {
         <div className="flex-1 container mx-auto px-4 py-8">
           <div className="max-w-3xl mx-auto">
             <RevealOnScroll className="mb-8 text-center">
-              <h1 className="text-4xl md:text-5xl font-bold gradient-text mb-3 tracking-tight">Upload Notes</h1>
+              <span className="eyebrow mb-4">Contribute</span>
+              <h1 className="text-4xl md:text-6xl font-heading font-bold text-foreground mt-4 mb-3 tracking-[-0.03em] leading-[1]">
+                Upload <span className="gradient-text italic font-light">notes</span>
+              </h1>
+              <div className="rule-gold w-32 mx-auto mb-4" />
               <p className="text-muted-foreground text-lg">Share your study materials with the community</p>
             </RevealOnScroll>
 

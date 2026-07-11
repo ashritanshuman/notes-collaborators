@@ -61,7 +61,10 @@ const Dashboard = () => {
                   {initials}
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h1 className="text-3xl md:text-4xl font-bold gradient-text mb-2 tracking-tight">{profile?.display_name || "Student"}</h1>
+                  <span className="eyebrow mb-2">Your Journal</span>
+                  <h1 className="text-3xl md:text-5xl font-heading font-bold text-foreground mt-2 mb-2 tracking-[-0.03em] leading-[1]">
+                    {profile?.display_name || <span className="gradient-text italic font-light">Student</span>}
+                  </h1>
                   <p className="text-muted-foreground mb-4">{user.email}</p>
                   {(profile?.branch || profile?.year) && (
                     <div className="flex flex-wrap gap-4 justify-center md:justify-start text-sm">
@@ -79,18 +82,22 @@ const Dashboard = () => {
 
               <div className="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-border/50">
                 <div className="text-center">
-                  <p className="text-3xl md:text-4xl font-bold gradient-text">{myUploads.length}</p>
-                  <p className="text-sm text-muted-foreground">Uploads</p>
+                  <p className="text-3xl md:text-5xl font-heading font-bold text-accent tracking-[-0.02em]">{myUploads.length}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-2">Uploads</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-3xl md:text-4xl font-bold gradient-text">{totalDownloads}</p>
-                  <p className="text-sm text-muted-foreground">Downloads</p>
+                  <p className="text-3xl md:text-5xl font-heading font-bold text-accent tracking-[-0.02em]">{totalDownloads}</p>
+                  <p className="text-xs uppercase tracking-[0.2em] text-muted-foreground mt-2">Downloads</p>
                 </div>
               </div>
             </div>
           </RevealOnScroll>
 
-          <h2 className="text-2xl font-bold text-foreground mb-4">My Uploads ({myUploads.length})</h2>
+          <div className="flex items-baseline gap-3 mb-6">
+            <span className="eyebrow">Archive</span>
+            <div className="rule-gold flex-1" />
+          </div>
+          <h2 className="text-2xl md:text-3xl font-heading font-bold text-foreground mb-6 tracking-[-0.02em]">My uploads <span className="text-accent font-light">({myUploads.length})</span></h2>
           {myUploads.length === 0 ? (
             <div className="glass-card rounded-xl p-12 text-center">
               <p className="text-muted-foreground mb-4">You haven't uploaded any notes yet.</p>
