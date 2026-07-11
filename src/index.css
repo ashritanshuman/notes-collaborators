@@ -121,14 +121,31 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground font-sans antialiased transition-colors-smooth;
+    font-feature-settings: "ss01", "cv11";
   }
-  
-  * {
-    @apply transition-colors-smooth;
+
+  h1, h2, h3, h4 {
+    letter-spacing: -0.02em;
   }
 }
 
 @layer utilities {
+  /* Editorial helpers */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 text-xs font-medium tracking-[0.2em] uppercase text-accent;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 28px;
+    height: 1px;
+    background: hsl(var(--accent));
+    display: inline-block;
+  }
+  .rule-gold {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, hsl(var(--accent) / 0.6), transparent);
+  }
+
   /* Glass morphism effects */
   .glass {
     background: hsl(var(--glass-bg) / 0.4);

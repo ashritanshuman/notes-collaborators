@@ -108,19 +108,23 @@ const Home = () => {
         <ParticleBackground />
         {/* Ambient background effects */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <motion.div style={{ y: blob1Y }} className="absolute top-1/4 -left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></motion.div>
-          <motion.div style={{ y: blob2Y }} className="absolute bottom-1/4 -right-1/4 w-96 h-96 bg-accent/5 rounded-full blur-3xl animate-float delay-200"></motion.div>
+          <motion.div style={{ y: blob1Y }} className="absolute top-1/4 -left-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-float"></motion.div>
+          <motion.div style={{ y: blob2Y }} className="absolute bottom-1/4 -right-1/4 w-[32rem] h-[32rem] bg-accent/5 rounded-full blur-3xl animate-float delay-200"></motion.div>
         </div>
         
         <div className="container mx-auto px-4 relative pointer-events-none">
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-5xl mx-auto text-center space-y-10">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-heading font-bold leading-tight animate-fade-in pointer-events-auto">
-              <span className="text-foreground">Collaborative Notes for</span>
-              <span className="block mt-2 gradient-text">
-                Modern Students
+          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="max-w-5xl mx-auto text-center space-y-8">
+            <div className="flex justify-center pointer-events-auto animate-fade-in">
+              <span className="eyebrow">Vol. 01 &middot; The Study Journal</span>
+            </div>
+            <h1 className="text-5xl md:text-7xl lg:text-[7.5rem] font-heading font-bold leading-[0.95] tracking-[-0.035em] animate-fade-in pointer-events-auto">
+              <span className="text-foreground">Collaborative notes,</span>
+              <span className="block mt-3 gradient-text italic font-light">
+                elevated.
               </span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed animate-fade-in delay-100 pointer-events-auto">
+            <div className="rule-gold w-40 mx-auto pointer-events-auto" />
+            <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-fade-in delay-100 pointer-events-auto">
               Share, discover, and download quality study notes from students across all branches and semesters. Join the future of collaborative learning.
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center pt-6 animate-fade-in delay-200 pointer-events-auto">
@@ -131,7 +135,7 @@ const Home = () => {
                 </Button>
               </Link>
               <Link to="/upload">
-                <Button size="lg" variant="outline" className="glass text-base px-8 py-6 h-auto hover-lift">
+                <Button size="lg" variant="outline" className="glass text-base px-8 py-6 h-auto hover-lift border-accent/40">
                   Upload Notes
                 </Button>
               </Link>
@@ -144,8 +148,9 @@ const Home = () => {
       <section id="features" className="py-24 relative scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="text-center mb-16">
+            <span className="eyebrow mb-6">The Platform</span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
-              Why Choose <span className="gradient-text">NotesHub</span>?
+              Why choose <span className="gradient-text italic font-light">NotesHub</span>
             </h2>
             <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               The best platform for collaborative learning and knowledge sharing
@@ -172,13 +177,14 @@ const Home = () => {
         <div className="container mx-auto px-4">
           <RevealOnScroll className="flex items-center justify-between mb-12">
             <div>
+              <span className="eyebrow mb-4">This Week</span>
               <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-3">
-                Top <span className="gradient-text">Downloaded</span> Notes
+                Most <span className="gradient-text italic font-light">downloaded</span>
               </h2>
               <p className="text-lg text-muted-foreground">Most popular study materials this week</p>
             </div>
             <Link to="/browse">
-              <Button variant="ghost" className="hover-lift text-base">
+              <Button variant="ghost" className="hover-lift text-base text-accent hover:text-accent">
                 View All
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -200,8 +206,9 @@ const Home = () => {
       <section id="contributors" className="py-24 relative scroll-mt-20">
         <div className="container mx-auto px-4">
           <RevealOnScroll className="text-center mb-16">
+            <span className="eyebrow mb-6">Recognition</span>
             <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
-              Top <span className="gradient-text">Contributors</span>
+              Top <span className="gradient-text italic font-light">contributors</span>
             </h2>
             <p className="text-lg text-muted-foreground">Amazing students making learning better for everyone</p>
           </RevealOnScroll>
@@ -236,9 +243,10 @@ const Home = () => {
             <div className="absolute bottom-0 left-0 w-64 h-64 bg-accent/5 rounded-full blur-3xl"></div>
             
             <div className="relative z-10">
-              <TrendingUp className="h-16 w-16 text-foreground mx-auto mb-8 animate-float" />
+              <TrendingUp className="h-14 w-14 text-accent mx-auto mb-6 animate-float" />
+              <span className="eyebrow mb-6 justify-center">Join Now</span>
               <h2 className="text-4xl md:text-5xl font-heading font-bold text-foreground mb-6">
-                Ready to Start <span className="gradient-text">Learning</span>?
+                Ready to start <span className="gradient-text italic font-light">learning</span>?
               </h2>
               <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
                 Join thousands of students sharing and accessing quality study materials. Upload your notes and help the community grow.
